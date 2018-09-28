@@ -1,0 +1,47 @@
+---
+title: 'Análisis Estadístico con R'
+subtitle: 'Galería'
+author: 
+- name: VMO
+  affiliation: "[RUsersEC](http://rusersgroup.com/)"
+date: "4 de julio de 2018"
+output: 
+  md_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+knitr::opts_knit$set(root.dir = normalizePath("/Users/victormoralesonate/Documents/Consultorias&Cursos/DataLectures")) 
+```
+
+
+<!--
+La revisión metodológica aquí vertida se basa en [@Wang_2012].
+-->
+
+
+#  Estadística y Técnicas de Machine Learning con R
+## Banco Solidario 11-07-18/01-08-18
+
+![](3 Solidario.jpg)
+
+
+# Análisis Estadístico con R 
+## FLACSO 18-06-18/06-07-18
+
+![](2.jpg)
+
+
+
+# Análisis Estadístico con R - Grupo A, 
+## FLACSO 19-03-18/17-03-18
+
+![](1Ga.jpg)
+
+#  Análisis Estadístico con R
+## Grupo B, FLACSO 19-03-18/17-03-18
+
+![](1Gb.jpg)
+

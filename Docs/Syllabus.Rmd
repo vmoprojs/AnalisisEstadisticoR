@@ -1,0 +1,66 @@
+---
+title: "Análisis Estadísico con R"
+author: "VMO"
+date: "11/07/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Generalidades
+
+Duración:
+Fecha de Inicio: 
+Fecha de Inicio: 
+Horario: 
+Lugar: 
+
+
+
+## Justificación
+
+Convertir datos en información es relevante para la toma de decisiones en la gestión pública y privada. R es un paquete versátil que permite el manejo efectivo de información. Tiene un enfoque especializado de carácter estadístico sin dejar de lado otras múltiples aplicaciones. Es importante el hecho de que es un software de uso libre ampliamente utilizado por la comunidad científica mundial.
+Sin duda alguna existe una gran diferencia entre un estudiante/profesional de cualquier área que conoce y maneja R con aquel que no.
+
+
+## Dirigido a:
+
+Estudiantes de áreas relacionadas a: economía, ingeniería, matemática, estadística. Profesionales que desean adquirir/reforzar destreza en la herramienta R.
+
+
+
+## Objetivos:
+
+-   Analizar datos desde una perspectiva descriptiva y analítica.
+-   Elaborar y analizar modelos lineales y series de tiempo en R.
+-   Realizar técnicas de diagnóstico de modelos lineales y series de tiempo en R.
+
+
+## Requisitos
+
+Conocimiento básico de ofimática.
+
+## Cronograma
+
+| Carpeta | Descripción                        |
+|---------|------------------------------------|
+| [P1-0]  | Intalación                         |
+| [P1-1]  | Introducción                       |
+| [P1-2]  | Números y vectores                 |
+| [P1-3]  | Objetos, bucles, apply y aggregate |
+| [P1-4]  | Procedimientos gráficos            |
+| [P1-5]  | Simulación                         |
+| [P2-1]  | Estadística Descriptiva            |
+| [P2-2]  | Regresión Lineal                   |
+| [P2-3]  | Supuestos RLM                      |
+| [P2-4]  | Modelos de probabilidad            |
+| [P3-1]  | Series de tiempo                   |
+
+## Evaluación
+
+Al final de cada temática se enviará un trabajo/taller/laboratorio que debe ser entregado 5 días después de enviado. Además, tendrán un examen final que aborde un ejercicio de cada trabajo. Los trabajos tienen una ponderación del $60\%$ y la prueba del $40\%$. El curso se aprueba con $70\%$ o más, de lo contrario tendrán únicamente un certificado de asistencia de haber cumplido con, al menos, el $80\%$ de asistencia.
+
+
+
