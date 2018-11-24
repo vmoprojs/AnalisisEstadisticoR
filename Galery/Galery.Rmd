@@ -1,14 +1,11 @@
 ---
-title: 'Análisis Estadístico con R'
-subtitle: 'Galería'
-author: 
-- name: VMO
-  affiliation: "[RUsersEC](http://rusersgroup.com/)"
+title: "Análisis Estadístico con R"
+author: '[Víctor Morales-Oñate](https://sites.google.com/site/moralesonatevictor/)'
 date: "4 de julio de 2018"
-output: 
-  md_document:
-    toc: true
-    toc_depth: 2
+output:
+  md_document: default
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -45,3 +42,9 @@ La revisión metodológica aquí vertida se basa en [@Wang_2012].
 
 ![](1Gb.jpg)
 
+
+
+#  Escuela de Verano, Estadística en R
+## Escuela Politécnica Nacional 28-09-18/24-11-18
+
+![](veranoEPN2018.jpg)

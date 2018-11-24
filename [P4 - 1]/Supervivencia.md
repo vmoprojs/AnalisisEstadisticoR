@@ -42,6 +42,7 @@
 
 <!--
 La revisión metodológica aquí vertida se basa en [@Wang_2012].
+https://estadisticaorquestainstrumento.wordpress.com/2013/01/07/estimador-de-kaplan-meier/
 -->
 Esta sección es principalmente una síntesis y traducción de Sestelo
 (2017). En el cuerpo del material se irán citando las referencias
