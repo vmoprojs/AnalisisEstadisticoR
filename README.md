@@ -90,15 +90,17 @@ Cronograma
 <td>[P3-1]</td>
 <td>Series de tiempo</td>
 </tr>
+<tr class="even">
+<td>[P4-1]</td>
+<td>Modelos de Supervivencia</td>
+</tr>
+<tr class="odd">
+<td>[P5-1]</td>
+<td>Machine Learning</td>
+</tr>
+<tr class="even">
+<td>[P6-1]</td>
+<td>No Paramétrica &amp; Bayesiana</td>
+</tr>
 </tbody>
 </table>
-
-Evaluación
-----------
-
-Al final de cada temática se enviará un trabajo/taller/laboratorio que
-debe ser entregado 5 días después de enviado. Además, tendrán un examen
-final que aborde un ejercicio de cada trabajo. Los trabajos tienen una
-ponderación del 60% y la prueba del 40%. El curso se aprueba con 70% o
-más, de lo contrario tendrán únicamente un certificado de asistencia de
-haber cumplido con, al menos, el 80% de asistencia.
