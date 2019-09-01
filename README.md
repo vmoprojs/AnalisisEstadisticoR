@@ -48,7 +48,7 @@ Cronograma
 <tbody>
 <tr class="odd">
 <td>[P1-0]</td>
-<td>Intalación</td>
+<td>Instalación</td>
 </tr>
 <tr class="even">
 <td>[P1-1]</td>
