@@ -102,5 +102,9 @@ Cronograma
 <td>[P6-1]</td>
 <td>No Paramétrica &amp; Bayesiana</td>
 </tr>
+<tr class="odd">
+<td>[P7-1]</td>
+<td>Técnicas de Análisis Multivariante</td>
+</tr>
 </tbody>
 </table>
