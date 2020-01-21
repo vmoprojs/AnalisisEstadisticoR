@@ -1,5 +1,7 @@
 -   [Supuestos de RLM](#supuestos-de-rlm)
 -   [Análisis Discriminante](#analisis-discriminante)
+-   [Análisis de correlación canónica
+    (CCA)](#analisis-de-correlacion-canonica-cca)
 -   [Referencias](#referencias)
 
 <script type="text/x-mathjax-config">
@@ -862,9 +864,9 @@ discriminante**.
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##            Df  Sum Sq Mean Sq      F N.Perm Pr(>F)   
-    ## Groups      2  190082   95041 8.3286    999  0.002 **
-    ## Residuals 175 1997003   11411                        
+    ##            Df  Sum Sq Mean Sq      F N.Perm Pr(>F)    
+    ## Groups      2  190082   95041 8.3286    999  0.001 ***
+    ## Residuals 175 1997003   11411                         
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1084,7 +1086,7 @@ Realizamos un gráfico de los datos:
     ## 
     ## Response: Distances
     ##           Df Sum Sq Mean Sq      F N.Perm Pr(>F)
-    ## Groups     2   6224  3112.0 2.4009    999  0.111
+    ## Groups     2   6224  3112.0 2.4009    999  0.112
     ## Residuals 82 106285  1296.2
 
 Conclusión: no rechazo la hipótesis nula de homogeneidad intra-grupo.
@@ -1305,8 +1307,475 @@ Transformemos los datos en un data.frame
 -   Estima la matriz de confusión
 -   ¿Usarías este modelo para una aplicación real?
 
+Análisis de correlación canónica (CCA)
+--------------------------------------
+
+Para ilustrar el método vamos a usar el ejemplo 10.2.3 con el conjunto
+de datos de la tabla 5.1.1 de Mardia, Kent, and Bibby (1979).
+
+Los datos son:
+
+-   *l*<sub>1</sub>: longitud de la cabeza del primer hijo
+-   *l*<sub>2</sub>: longitud de la cabeza del segundo hijo
+-   *b*<sub>1</sub>: amplitud (*breadth*) de la cabeza del primer hijo
+-   *b*<sub>2</sub>: amplitud (*breadth*) de la cabeza del segundo hijo
+
+Supongamos que **x** es un vector aleatorio de dimensión *q* y **y** es
+un vector aleatorio de dimensión *p*. También supongamos que **x** e
+**y** tienen medias **μ** y **ν**, y que
+
+*E*{(**x** **−** **μ**)(**x** **−** **μ**)′} = **Σ**<sub>11</sub>
+
+*E*{(**y** **−** **μ**)(**y** **−** **μ**)′} = **Σ**<sub>22</sub>
+
+*E*{(**x** **−** **μ**)(**y** **−** **μ**)′} = **Σ**<sub>12</sub> = **Σ**<sub>21</sub>
+
+En `R`, usando estos datos tenemos:
+
+    uu = "http://www1.maths.leeds.ac.uk/~charles/mva-data/headlengthandbreadth.dat"
+    datos = read.csv(url(uu),sep = "")
+
+    fz <- function(x)
+    {
+      return ( (x-mean(x))/sd(x))
+    }
+
+    datos = apply(datos,2,fz)
+
+    (S11 = cov(datos[,1:2]))
+
+    ##           l1        b1
+    ## l1 1.0000000 0.7345555
+    ## b1 0.7345555 1.0000000
+
+    (S22 = cov(datos[,3:4]))
+
+    ##           l2        b2
+    ## l2 1.0000000 0.8392519
+    ## b2 0.8392519 1.0000000
+
+    (S12 = S21 = cov(datos[,])[1:2,3:4])
+
+    ##           l2        b2
+    ## l1 0.7107518 0.7039807
+    ## b1 0.6931573 0.7085504
+
+Ahora consideramos las dos combinaciones lineales *η* = **a****′****x**
+y *ϕ* = **b****′****y**. La correlación entre *η* y *ϕ* es
+
+$$
+\\rho(\\boldsymbol{a,b}) = \\frac{\\boldsymbol{a'\\Sigma\_{12}b}}{(\\boldsymbol{a'\\Sigma\_{11}ab'\\Sigma\_{22}b})^{1/2}}
+$$
+ La notación *ρ*(**a****,** **b**) se usa para enfatizar que la
+correlación cambia según los valores elegidos de **a** y **b**.
+
+El objetivo es encontrar los vectores **a** y **b** que **maximizan**
+*ρ*(**a****,** **b**), que es equivalente a
+
+*m**a**x*<sub>**a****,** **b**</sub>**a****′****Σ**<sub>**12**</sub>**b**
+ sujeto a
+
+**a****′****Σ**<sub>**11**</sub>**a** = **b****′****Σ**<sub>**22**</sub>**b** = 1
+ **Solución**
+
+Sea
+
+**K** **=** **Σ**<sub>**11**</sub><sup> **−** **1**</sup>**Σ**<sub>**12**</sub>**Σ**<sub>**22**</sub><sup> **−** **1**</sup>
+
+En `R`
+
+    K = eigen(S11)$vectors %*% sqrt(solve(diag(eigen(S11)$values))) %*% solve(eigen(S11)$vectors) %*%
+      S12 %*%
+      eigen(S22)$vectors %*% sqrt(solve(diag(eigen(S22)$values))) %*% solve(eigen(S22)$vectors)
+
+Ahora fijamos **N**<sub>**1**</sub> **=** **K****K****′** y
+**N**<sub>**2**</sub> **=** **K****′****K** y
+
+**M**<sub>**1**</sub> **=** **Σ**<sub>**11**</sub><sup> **−** **1**</sup>**N**<sub>**1**</sub>**Σ**<sub>**11**</sub><sup> **−** **1**</sup>
+**M**<sub>**2**</sub> **=** **Σ**<sub>**22**</sub><sup> **−** **1**</sup>**N**<sub>**2**</sub>**Σ**<sub>**22**</sub><sup> **−** **1**</sup>
+
+En `R`
+
+    (N1 = K%*%t(K))
+
+    ##           [,1]      [,2]
+    ## [1,] 0.3192267 0.3093512
+    ## [2,] 0.3093512 0.3054060
+
+    (N2 = t(K)%*%(K))
+
+    ##           [,1]      [,2]
+    ## [1,] 0.3063796 0.3093714
+    ## [2,] 0.3093714 0.3182531
+
+    (M1 = solve(S11)%*%S12%*%solve(S22)%*%S21)
+
+    ##           l2        b2
+    ## l1 0.3213612 0.3206147
+    ## b1 0.2980647 0.3029597
+
+    (M2 = solve(S22)%*%S21%*%solve(S11)%*%S12)
+
+    ##           l2        b2
+    ## l2 0.3284513 0.3276745
+    ## b2 0.2910913 0.2958697
+
+**Definición**
+
+Sea
+**a**<sub>*i*</sub> = **Σ**<sub>**11**</sub><sup> **−** **1****/****2**</sup>**α**<sub>**i**</sub>
+y
+**b**<sub>*i*</sub> = **Σ**<sub>**22**</sub><sup> **−** **1****/****2**</sup>**β**<sub>**i**</sub>
+para *i* = 1…*k* (*k* = *r**a**n**k*(**K**)), entonces
+
+1.  Los vectores **a**<sub>*i*</sub> y **b**<sub>*i*</sub> son los
+    iésimos **vectores canónicos** para **x** y **y** respectivamente.
+
+2.  **α**<sub>**i**</sub> y **β**<sub>**i**</sub> son los vectores
+    propios de **N**<sub>**1**</sub> y **N**<sub>**2**</sub>
+    respectivamente.
+
+3.  Las variables aleatorias
+    *η*<sub>*i*</sub> = **a**<sub>**1**</sub>**′****x** y
+    *ϕ*<sub>*i*</sub> = **b**<sub>**1**</sub>**′****y** son las iésimas
+    **variables de correlación canónicas**.
+
+4.  *ρ*<sub>*i*</sub> = *λ*<sub>*i*</sub><sup>1/2</sup> es e iésimo
+    **coeficiente de correlación canónico**.
+
+En `R`
+
+    #a_1 a_2
+    eigen(S11)$vectors %*% sqrt(solve(diag(eigen(S11)$values))) %*% solve(eigen(S11)$vectors)%*%
+      eigen(N1)$vectors
+
+    ##            [,1]      [,2]
+    ## [1,] -0.5521896  1.366374
+    ## [2,] -0.5215372 -1.378365
+
+    #b_1 b_2
+    eigen(S22)$vectors %*% sqrt(solve(diag(eigen(S22)$values))) %*% solve(eigen(S22)$vectors)%*%
+      eigen(N2)$vectors
+
+    ##           [,1]      [,2]
+    ## [1,] 0.5044484 -1.768570
+    ## [2,] 0.5382877  1.758566
+
+De tal manera que las primeras variables de correlación canónica son
+
+*η*<sub>1</sub> =  − 0.552*l*<sub>1</sub> − 0.522*b*<sub>1</sub>
+ y
+
+*ϕ*<sub>1</sub> = 0.505*l*<sub>2</sub> + 0.538*b*<sub>2</sub>
+
+Los coeficientes de correlación canónica son:
+
+    sqrt(eigen(M1)$values) # Canonical correlation coefficients
+
+    ## [1] 0.78830930 0.05375324
+
+### Supuestos
+
+-   Normalidad (uni y multivariante dentro de **x** e **y**)
+-   Linealidad (la no linealidad afecta las correlaciones)
+-   Igual varianza
+
+Note que este método no refleja relaciones no lineales en los datos.
+
+### Un ejemplo en R
+
+Usamos los datos `LifeCyclesSavings` para examinar ratio de ahorros
+(ahorros/ingreso) del ciclo de vida desde 1960 hasta 1970.
+
+El conjunto de datos tiene 50 observaciones y 5 variables:
+
+-   sr = aggregate personal savings;
+-   pop15 = % population under 15;
+-   pop75 = % population over 75;
+-   dpi = disposable income;
+-   ddpi = % growth rate of dpi
+
+<!-- -->
+
+    library(CCA)
+    ?LifeCycleSavings
+
+Para correr el análisis de correlación canónica, primero investiguemos
+más de la función `cancor()`
+
+    ?cancor
+
+Veamos los datos
+
+    data("LifeCycleSavings")
+    head(LifeCycleSavings)
+
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["sr"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["pop15"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["pop75"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["dpi"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["ddpi"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"11.43","2":"29.35","3":"2.87","4":"2329.68","5":"2.87","_rn_":"Australia"},{"1":"12.07","2":"23.32","3":"4.41","4":"1507.99","5":"3.93","_rn_":"Austria"},{"1":"13.17","2":"23.80","3":"4.43","4":"2108.47","5":"3.82","_rn_":"Belgium"},{"1":"5.75","2":"41.89","3":"1.67","4":"189.13","5":"0.22","_rn_":"Bolivia"},{"1":"12.88","2":"42.19","3":"0.83","4":"728.47","5":"4.56","_rn_":"Brazil"},{"1":"8.79","2":"31.72","3":"2.85","4":"2982.88","5":"2.43","_rn_":"Canada"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+
+El análisis
+
+    pop <- LifeCycleSavings[,2:3]
+    oec <- LifeCycleSavings[,-(2:3)]
+    cancor(pop,oec)
+
+    ## $cor
+    ## [1] 0.8247966 0.3652762
+    ## 
+    ## $xcoef
+    ##               [,1]        [,2]
+    ## pop15 -0.009110856 -0.03622206
+    ## pop75  0.048647514 -0.26031158
+    ## 
+    ## $ycoef
+    ##              [,1]          [,2]          [,3]
+    ## sr   0.0084710221  3.337936e-02 -5.157130e-03
+    ## dpi  0.0001307398 -7.588232e-05  4.543705e-06
+    ## ddpi 0.0041706000 -1.226790e-02  5.188324e-02
+    ## 
+    ## $xcenter
+    ##   pop15   pop75 
+    ## 35.0896  2.2930 
+    ## 
+    ## $ycenter
+    ##        sr       dpi      ddpi 
+    ##    9.6710 1106.7584    3.7576
+
+Ahora usaremos el paquete `CCA` para obtener las matrices de correlación
+canónica
+
+    library(CCA)
+    matcor(pop,oec)
+
+    ## $Xcor
+    ##            pop15      pop75
+    ## pop15  1.0000000 -0.9084787
+    ## pop75 -0.9084787  1.0000000
+    ## 
+    ## $Ycor
+    ##             sr        dpi       ddpi
+    ## sr   1.0000000  0.2203589  0.3047872
+    ## dpi  0.2203589  1.0000000 -0.1294855
+    ## ddpi 0.3047872 -0.1294855  1.0000000
+    ## 
+    ## $XYcor
+    ##             pop15       pop75         sr        dpi        ddpi
+    ## pop15  1.00000000 -0.90847871 -0.4555381 -0.7561881 -0.04782569
+    ## pop75 -0.90847871  1.00000000  0.3165211  0.7869995  0.02532138
+    ## sr    -0.45553809  0.31652112  1.0000000  0.2203589  0.30478716
+    ## dpi   -0.75618810  0.78699951  0.2203589  1.0000000 -0.12948552
+    ## ddpi  -0.04782569  0.02532138  0.3047872 -0.1294855  1.00000000
+
+Ahora las correlaciones canónicas para función canónica
+
+    (res.cc <- cc(pop,oec))
+
+    ## $cor
+    ## [1] 0.8247966 0.3652762
+    ## 
+    ## $names
+    ## $names$Xnames
+    ## [1] "pop15" "pop75"
+    ## 
+    ## $names$Ynames
+    ## [1] "sr"   "dpi"  "ddpi"
+    ## 
+    ## $names$ind.names
+    ##  [1] "Australia"      "Austria"        "Belgium"        "Bolivia"       
+    ##  [5] "Brazil"         "Canada"         "Chile"          "China"         
+    ##  [9] "Colombia"       "Costa Rica"     "Denmark"        "Ecuador"       
+    ## [13] "Finland"        "France"         "Germany"        "Greece"        
+    ## [17] "Guatamala"      "Honduras"       "Iceland"        "India"         
+    ## [21] "Ireland"        "Italy"          "Japan"          "Korea"         
+    ## [25] "Luxembourg"     "Malta"          "Norway"         "Netherlands"   
+    ## [29] "New Zealand"    "Nicaragua"      "Panama"         "Paraguay"      
+    ## [33] "Peru"           "Philippines"    "Portugal"       "South Africa"  
+    ## [37] "South Rhodesia" "Spain"          "Sweden"         "Switzerland"   
+    ## [41] "Turkey"         "Tunisia"        "United Kingdom" "United States" 
+    ## [45] "Venezuela"      "Zambia"         "Jamaica"        "Uruguay"       
+    ## [49] "Libya"          "Malaysia"      
+    ## 
+    ## 
+    ## $xcoef
+    ##              [,1]       [,2]
+    ## pop15  0.06377599 -0.2535544
+    ## pop75 -0.34053260 -1.8221811
+    ## 
+    ## $ycoef
+    ##               [,1]          [,2]
+    ## sr   -0.0592971550  0.2336554912
+    ## dpi  -0.0009151786 -0.0005311762
+    ## ddpi -0.0291942000 -0.0858752749
+    ## 
+    ## $scores
+    ## $scores$xscores
+    ##                       [,1]        [,2]
+    ## Australia      -0.56253600  0.40390249
+    ## Austria        -1.47152544 -0.87332319
+    ## Belgium        -1.44772362 -1.03147293
+    ## Bolivia         0.64585407 -0.58905269
+    ## Brazil          0.95103425  0.86551308
+    ## Canada         -0.40457624 -0.16057787
+    ## Chile           0.62111144  0.55740907
+    ## China           1.16878601  0.50796273
+    ## Colombia        1.15651493 -0.68190575
+    ## Costa Rica      1.19304831 -1.08123466
+    ## Denmark        -1.23791620 -0.27758614
+    ## Ecuador         1.09119961 -0.83511633
+    ## Finland        -0.48857145  1.69786021
+    ## France         -1.45930966 -1.84294039
+    ## Germany        -1.11119865  1.06072429
+    ## Greece         -0.87874295  0.93055884
+    ## Guatamala       1.18358828 -0.18609424
+    ## Honduras        1.36333825  0.02032415
+    ## Iceland        -0.33557620 -1.16539024
+    ## India           0.85064214  0.85175743
+    ## Ireland        -0.89660448 -2.46031003
+    ## Italy          -1.07829893  0.51703990
+    ## Japan          -0.38486053  2.74651367
+    ## Korea           0.89509245  0.83383808
+    ## Luxembourg     -1.33690279  0.75116267
+    ## Malta          -0.22287754  0.32393631
+    ## Norway         -1.05180046 -0.19175733
+    ## Netherlands    -0.98785900  0.88796621
+    ## New Zealand    -0.45678604 -0.96933925
+    ## Nicaragua       1.00339345 -0.54954583
+    ## Panama          0.91241030 -0.15606348
+    ## Paraguay        0.81170333  0.72072321
+    ## Peru            0.92534657 -0.46157725
+    ## Philippines     1.11184809 -0.69488593
+    ## Portugal       -0.58059799  0.53923234
+    ## South Africa   -0.19644195  0.82228337
+    ## South Rhodesia  0.06108731  2.21221207
+    ## Spain          -0.66521535  0.81212511
+    ## Sweden         -1.63569355 -0.63352441
+    ## Switzerland    -1.22912136  0.32265569
+    ## Turkey          0.94434558  0.09809587
+    ## Tunisia         1.07227152 -0.82338461
+    ## United Kingdom -1.49174087 -0.95175452
+    ## United States  -0.72389730 -0.73315394
+    ## Venezuela       1.19569390 -0.32950372
+    ## Zambia          1.23813259  0.58162543
+    ## Jamaica         0.57631460 -0.50314665
+    ## Uruguay        -0.58926282  0.98656605
+    ## Libya           0.62443782 -1.77432308
+    ## Malaysia        1.32844252 -0.09502380
+    ## 
+    ## $scores$yscores
+    ##                        [,1]        [,2]
+    ## Australia      -1.197582618 -0.16236396
+    ## Austria        -0.514485534  0.33260994
+    ## Belgium        -1.126047497  0.28011657
+    ## Bolivia         1.175575433 -0.12494843
+    ## Brazil          0.132491457  0.88183195
+    ## Canada         -1.625987352 -1.08839364
+    ## Chile           0.975882427 -1.79030274
+    ## China           0.535391632  0.71855258
+    ## Colombia        1.057642399 -0.59695499
+    ## Costa Rica      0.543808669  0.67893036
+    ## Denmark        -1.704368254  0.91924174
+    ## Ecuador         1.155871496 -0.85121380
+    ## Finland        -0.635218480  0.01315294
+    ## France         -1.211470012  0.04020705
+    ## Germany        -1.397266488 -0.01731182
+    ## Greece          0.083021015  0.14211897
+    ## Guatamala       1.209216281 -0.92679302
+    ## Honduras        0.933602822  0.05262497
+    ## Iceland        -0.150891245 -2.15783934
+    ## India           1.036015081  0.57429510
+    ## Ireland        -0.106933726  0.43825829
+    ## Italy          -0.526164584  0.94515342
+    ## Japan          -0.945445589  2.20814404
+    ## Korea           1.100359257 -1.02841475
+    ## Luxembourg     -1.205145263 -0.36666114
+    ## Malta          -0.009000439  1.25130272
+    ## Norway         -1.059225255 -0.45008336
+    ## Netherlands    -0.989337775  0.49151632
+    ## New Zealand    -0.349384397  0.20271478
+    ## Nicaragua       0.892846437 -0.02931829
+    ## Panama          0.807040147 -0.92369850
+    ## Paraguay        1.344342456 -1.08273725
+    ## Peru            0.557284192  1.34827236
+    ## Philippines     0.740722188  1.38450895
+    ## Portugal        0.206695290  0.61907452
+    ## South Africa    0.375656978  0.71988759
+    ## South Rhodesia  0.619330744  1.45344991
+    ## Spain           0.167542079  0.61909114
+    ## Sweden         -1.818231179 -1.75733210
+    ## Switzerland    -1.628446935  0.32307189
+    ## Turkey          0.948826794 -0.61162985
+    ## Tunisia         1.267754398 -0.92230572
+    ## United Kingdom -0.485816535 -0.66038997
+    ## United States  -2.486211894 -1.91878127
+    ## Venezuela       0.389454702  0.32762273
+    ## Zambia          0.318834488  2.47265581
+    ## Jamaica         0.591415820 -0.62589387
+    ## Uruguay         0.391732707  0.24124982
+    ## Libya           0.567959967 -0.77253487
+    ## Malaysia        1.046343696 -0.81375377
+    ## 
+    ## $scores$corr.X.xscores
+    ##             [,1]       [,2]
+    ## pop15  0.9829821 -0.1837015
+    ## pop75 -0.9697929 -0.2439299
+    ## 
+    ## $scores$corr.Y.xscores
+    ##             [,1]        [,2]
+    ## sr   -0.40500636  0.31259455
+    ## dpi  -0.78728255 -0.09633306
+    ## ddpi -0.03904398  0.05142128
+    ## 
+    ## $scores$corr.X.yscores
+    ##             [,1]        [,2]
+    ## pop15  0.8107603 -0.06710179
+    ## pop75 -0.7998819 -0.08910177
+    ## 
+    ## $scores$corr.Y.yscores
+    ##            [,1]       [,2]
+    ## sr   -0.4910379  0.8557760
+    ## dpi  -0.9545172 -0.2637266
+    ## ddpi -0.0473377  0.1407737
+
+Una evaluación visual
+
+    plt.cc(res.cc, type ="i")  # argumento type ="i" imprime los países individualmente
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-55-1.png)
+
+Los cuatro cuadrantes muestran una agrupación de los países en función
+de su índice de ahorro del ciclo de vida (ahorro personal dividido por
+el ingreso disponible) de 1960 a 1970. Japón tiene una proporción más
+alta en la primera dimensión que Irlanda, por lo que Japón está
+ahorrando más que lo que gasta.
+
+### Significancia
+
+    library(yacca)
+    cca.fit <- cca(pop,oec)
+    F.test.cca(cca.fit)
+
+    ## 
+    ##  F Test for Canonical Correlations (Rao's F Approximation)
+    ## 
+    ##          Corr        F   Num df Den df  Pr(>F)    
+    ## CV 1  0.82480 13.49772  6.00000     90 7.3e-11 ***
+    ## CV 2  0.36528       NA  2.00000     NA      NA    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+La primera correlación canónica, *r* = .82, es estadísticamente
+significativa (*F* = 13.49, *d**f* = 6.90, *p* &lt; .0001). La segunda
+correlación canónica no informa una prueba *F*, lo cual no es
+infrecuente en el análisis de correlación canónica, ya que la primera
+variante canónica suele ser la única que es estadísticamente
+significativa.
+
 Referencias
 ===========
+
+Mardia, Kanti, J. Kent, and J. Bibby. 1979. *Multivariate Analysis*.
+First. New York: Academic Press.
 
 Schumacker, Randall E. 2015. *Using R with Multivariate Statistics*.
 Sage Publications.
