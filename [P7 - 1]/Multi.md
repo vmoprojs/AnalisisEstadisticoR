@@ -4,6 +4,7 @@
     (CCA)](#analisis-de-correlacion-canonica-cca)
 -   [Análisis de componentes
     principales](#analisis-de-componentes-principales)
+-   [Análisis Factorial](#analisis-factorial)
 -   [Referencias](#referencias)
 
 <script type="text/x-mathjax-config">
@@ -866,9 +867,9 @@ discriminante**.
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##            Df  Sum Sq Mean Sq      F N.Perm Pr(>F)    
-    ## Groups      2  190082   95041 8.3286    999  0.001 ***
-    ## Residuals 175 1997003   11411                         
+    ##            Df  Sum Sq Mean Sq      F N.Perm Pr(>F)   
+    ## Groups      2  190082   95041 8.3286    999  0.002 **
+    ## Residuals 175 1997003   11411                        
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1087,11 +1088,9 @@ Realizamos un gráfico de los datos:
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##           Df Sum Sq Mean Sq      F N.Perm Pr(>F)  
-    ## Groups     2   6224  3112.0 2.4009    999  0.087 .
-    ## Residuals 82 106285  1296.2                       
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##           Df Sum Sq Mean Sq      F N.Perm Pr(>F)
+    ## Groups     2   6224  3112.0 2.4009    999    0.1
+    ## Residuals 82 106285  1296.2
 
 Conclusión: no rechazo la hipótesis nula de homogeneidad intra-grupo.
 
@@ -2385,6 +2384,927 @@ de los ejes.
     plot(ca <- hclust(dm, method = "average"))
 
 ![](Multi_files/figure-markdown_strict/unnamed-chunk-71-1.png)
+
+### ACP: Datos de *rating* de marca del consumidor
+
+Estos datos son comunes en investigación de mercado, se refieren a
+encuestas de percepción de marca.
+
+Las preguntas suelen ser realizadas usando escalas de *Likert* como: *En
+la escala del 1 al 10, donde 1 es menos y 10 es más, cuán \[adjetivo\]
+es la \[marca\]?*
+
+-   ¿Cuán de moda es la marca Metal?
+
+#### Datos
+
+Tenemos 10 marcas (de la *a* a la *j*) con 9 adjetivos para *N* = 100
+clientes. Veamos los datos:
+
+    brand.ratings <- read.csv("http://goo.gl/IQl8nc")
+    head(brand.ratings)
+
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["perform"],"name":[1],"type":["int"],"align":["right"]},{"label":["leader"],"name":[2],"type":["int"],"align":["right"]},{"label":["latest"],"name":[3],"type":["int"],"align":["right"]},{"label":["fun"],"name":[4],"type":["int"],"align":["right"]},{"label":["serious"],"name":[5],"type":["int"],"align":["right"]},{"label":["bargain"],"name":[6],"type":["int"],"align":["right"]},{"label":["value"],"name":[7],"type":["int"],"align":["right"]},{"label":["trendy"],"name":[8],"type":["int"],"align":["right"]},{"label":["rebuy"],"name":[9],"type":["int"],"align":["right"]},{"label":["brand"],"name":[10],"type":["fctr"],"align":["left"]}],"data":[{"1":"2","2":"4","3":"8","4":"8","5":"2","6":"9","7":"7","8":"4","9":"6","10":"a","_rn_":"1"},{"1":"1","2":"1","3":"4","4":"7","5":"1","6":"1","7":"1","8":"2","9":"2","10":"a","_rn_":"2"},{"1":"2","2":"3","3":"5","4":"9","5":"2","6":"9","7":"5","8":"1","9":"6","10":"a","_rn_":"3"},{"1":"1","2":"6","3":"10","4":"8","5":"3","6":"4","7":"5","8":"2","9":"1","10":"a","_rn_":"4"},{"1":"1","2":"1","3":"5","4":"8","5":"1","6":"9","7":"9","8":"1","9":"1","10":"a","_rn_":"5"},{"1":"2","2":"8","3":"9","4":"5","5":"3","6":"8","7":"7","8":"1","9":"2","10":"a","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+
+Ahora una inspección de los datos:
+
+    summary(brand.ratings)
+
+    ##     perform           leader           latest            fun        
+    ##  Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000  
+    ##  1st Qu.: 1.000   1st Qu.: 2.000   1st Qu.: 4.000   1st Qu.: 4.000  
+    ##  Median : 4.000   Median : 4.000   Median : 7.000   Median : 6.000  
+    ##  Mean   : 4.488   Mean   : 4.417   Mean   : 6.195   Mean   : 6.068  
+    ##  3rd Qu.: 7.000   3rd Qu.: 6.000   3rd Qu.: 9.000   3rd Qu.: 8.000  
+    ##  Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :10.000  
+    ##                                                                     
+    ##     serious          bargain           value            trendy     
+    ##  Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   : 1.00  
+    ##  1st Qu.: 2.000   1st Qu.: 2.000   1st Qu.: 2.000   1st Qu.: 3.00  
+    ##  Median : 4.000   Median : 4.000   Median : 4.000   Median : 5.00  
+    ##  Mean   : 4.323   Mean   : 4.259   Mean   : 4.337   Mean   : 5.22  
+    ##  3rd Qu.: 6.000   3rd Qu.: 6.000   3rd Qu.: 6.000   3rd Qu.: 7.00  
+    ##  Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :10.00  
+    ##                                                                    
+    ##      rebuy            brand    
+    ##  Min.   : 1.000   a      :100  
+    ##  1st Qu.: 1.000   b      :100  
+    ##  Median : 3.000   c      :100  
+    ##  Mean   : 3.727   d      :100  
+    ##  3rd Qu.: 5.000   e      :100  
+    ##  Max.   :10.000   f      :100  
+    ##                   (Other):400
+
+    str(brand.ratings)
+
+    ## 'data.frame':    1000 obs. of  10 variables:
+    ##  $ perform: int  2 1 2 1 1 2 1 2 2 3 ...
+    ##  $ leader : int  4 1 3 6 1 8 1 1 1 1 ...
+    ##  $ latest : int  8 4 5 10 5 9 5 7 8 9 ...
+    ##  $ fun    : int  8 7 9 8 8 5 7 5 10 8 ...
+    ##  $ serious: int  2 1 2 3 1 3 1 2 1 1 ...
+    ##  $ bargain: int  9 1 9 4 9 8 5 8 7 3 ...
+    ##  $ value  : int  7 1 5 5 9 7 1 7 7 3 ...
+    ##  $ trendy : int  4 2 1 2 1 1 1 7 5 4 ...
+    ##  $ rebuy  : int  6 2 6 1 1 2 1 1 1 1 ...
+    ##  $ brand  : Factor w/ 10 levels "a","b","c","d",..: 1 1 1 1 1 1 1 1 1 1 ...
+
+#### Reescalando los datos
+
+    brand.sc <- brand.ratings
+    brand.sc [ , 1:9] <- data.frame(scale(brand.ratings [ , 1:9]))
+    summary(brand.sc)
+
+    ##     perform            leader            latest             fun          
+    ##  Min.   :-1.0888   Min.   :-1.3100   Min.   :-1.6878   Min.   :-1.84677  
+    ##  1st Qu.:-1.0888   1st Qu.:-0.9266   1st Qu.:-0.7131   1st Qu.:-0.75358  
+    ##  Median :-0.1523   Median :-0.1599   Median : 0.2615   Median :-0.02478  
+    ##  Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.00000  
+    ##  3rd Qu.: 0.7842   3rd Qu.: 0.6069   3rd Qu.: 0.9113   3rd Qu.: 0.70402  
+    ##  Max.   : 1.7206   Max.   : 2.1404   Max.   : 1.2362   Max.   : 1.43281  
+    ##                                                                          
+    ##     serious           bargain             value             trendy        
+    ##  Min.   :-1.1961   Min.   :-1.22196   Min.   :-1.3912   Min.   :-1.53897  
+    ##  1st Qu.:-0.8362   1st Qu.:-0.84701   1st Qu.:-0.9743   1st Qu.:-0.80960  
+    ##  Median :-0.1163   Median :-0.09711   Median :-0.1405   Median :-0.08023  
+    ##  Mean   : 0.0000   Mean   : 0.00000   Mean   : 0.0000   Mean   : 0.00000  
+    ##  3rd Qu.: 0.6036   3rd Qu.: 0.65279   3rd Qu.: 0.6933   3rd Qu.: 0.64914  
+    ##  Max.   : 2.0434   Max.   : 2.15258   Max.   : 2.3610   Max.   : 1.74319  
+    ##                                                                           
+    ##      rebuy             brand    
+    ##  Min.   :-1.0717   a      :100  
+    ##  1st Qu.:-1.0717   b      :100  
+    ##  Median :-0.2857   c      :100  
+    ##  Mean   : 0.0000   d      :100  
+    ##  3rd Qu.: 0.5003   e      :100  
+    ##  Max.   : 2.4652   f      :100  
+    ##                    (Other):400
+
+Exploremos las correlaciones por parejas:
+
+    library(corrplot)
+    corrplot(cor(brand.sc [ , 1:9]) , order="hclust")
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-75-1.png)
+
+El argumento `order="hclust"` reordena las filas y las columnas de
+acuerdo a la similaridad de las variables.
+
+#### Media de los ratings por marca
+
+    brand.mean <- aggregate (. ~ brand , data=brand.sc , mean)
+    brand.mean
+
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["brand"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["perform"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["leader"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["latest"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["fun"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["serious"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["bargain"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["value"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["trendy"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["rebuy"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"a","2":"-0.88591874","3":"-0.5279035","4":"0.4109732","5":"0.6566458","6":"-0.91894067","7":"0.21409609","8":"0.18469264","9":"-0.52514473","10":"-0.59616642"},{"1":"b","2":"0.93087022","3":"1.0707584","4":"0.7261069","5":"-0.9722147","6":"1.18314061","7":"0.04161938","8":"0.15133957","9":"0.74030819","10":"0.23697320"},{"1":"c","2":"0.64992347","3":"1.1627677","4":"-0.1023372","5":"-0.8446753","6":"1.22273461","7":"-0.60704302","8":"-0.44067747","9":"0.02552787","10":"-0.13243776"},{"1":"d","2":"-0.67989112","3":"-0.5930767","4":"0.3524948","5":"0.1865719","6":"-0.69217505","7":"-0.88075605","8":"-0.93263529","9":"0.73666135","10":"-0.49398892"},{"1":"e","2":"-0.56439079","3":"0.1928362","4":"0.4564564","5":"0.2958914","6":"0.04211361","7":"0.55155051","8":"0.41816415","9":"0.13857986","10":"0.03654811"},{"1":"f","2":"-0.05868665","3":"0.2695106","4":"-1.2621589","5":"-0.2179102","6":"0.58923066","7":"0.87400696","8":"1.02268859","9":"-0.81324496","10":"1.35699580"},{"1":"g","2":"0.91838369","3":"-0.1675336","4":"-1.2849005","5":"-0.5167168","6":"-0.53379906","7":"0.89650392","8":"1.25616009","9":"-1.27639344","10":"1.36092571"},{"1":"h","2":"-0.01498383","3":"-0.2978802","4":"0.5019396","5":"0.7149495","6":"-0.14145855","7":"-0.73827529","8":"-0.78254646","9":"0.86430070","10":"-0.60402622"},{"1":"i","2":"0.33463879","3":"-0.3208825","4":"0.3557436","5":"0.4124989","6":"-0.14865746","7":"-0.25459062","8":"-0.80339213","9":"0.59078782","10":"-0.20317603"},{"1":"j","2":"-0.62994504","3":"-0.7885965","4":"-0.1543180","5":"0.2849595","6":"-0.60218870","7":"-0.09711188","8":"-0.07379367","9":"-0.48138267","10":"-0.96164748"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+
+    rownames(brand.mean) <- brand.mean [ , 1] # la marca como nombre de filas
+    brand.mean <- brand.mean [ , -1] # eliminamos la columna de marca
+    brand.mean
+
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["perform"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["leader"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["latest"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["fun"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["serious"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["bargain"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["value"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["trendy"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["rebuy"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"-0.88591874","2":"-0.5279035","3":"0.4109732","4":"0.6566458","5":"-0.91894067","6":"0.21409609","7":"0.18469264","8":"-0.52514473","9":"-0.59616642","_rn_":"a"},{"1":"0.93087022","2":"1.0707584","3":"0.7261069","4":"-0.9722147","5":"1.18314061","6":"0.04161938","7":"0.15133957","8":"0.74030819","9":"0.23697320","_rn_":"b"},{"1":"0.64992347","2":"1.1627677","3":"-0.1023372","4":"-0.8446753","5":"1.22273461","6":"-0.60704302","7":"-0.44067747","8":"0.02552787","9":"-0.13243776","_rn_":"c"},{"1":"-0.67989112","2":"-0.5930767","3":"0.3524948","4":"0.1865719","5":"-0.69217505","6":"-0.88075605","7":"-0.93263529","8":"0.73666135","9":"-0.49398892","_rn_":"d"},{"1":"-0.56439079","2":"0.1928362","3":"0.4564564","4":"0.2958914","5":"0.04211361","6":"0.55155051","7":"0.41816415","8":"0.13857986","9":"0.03654811","_rn_":"e"},{"1":"-0.05868665","2":"0.2695106","3":"-1.2621589","4":"-0.2179102","5":"0.58923066","6":"0.87400696","7":"1.02268859","8":"-0.81324496","9":"1.35699580","_rn_":"f"},{"1":"0.91838369","2":"-0.1675336","3":"-1.2849005","4":"-0.5167168","5":"-0.53379906","6":"0.89650392","7":"1.25616009","8":"-1.27639344","9":"1.36092571","_rn_":"g"},{"1":"-0.01498383","2":"-0.2978802","3":"0.5019396","4":"0.7149495","5":"-0.14145855","6":"-0.73827529","7":"-0.78254646","8":"0.86430070","9":"-0.60402622","_rn_":"h"},{"1":"0.33463879","2":"-0.3208825","3":"0.3557436","4":"0.4124989","5":"-0.14865746","6":"-0.25459062","7":"-0.80339213","8":"0.59078782","9":"-0.20317603","_rn_":"i"},{"1":"-0.62994504","2":"-0.7885965","3":"-0.1543180","4":"0.2849595","5":"-0.60218870","6":"-0.09711188","7":"-0.07379367","8":"-0.48138267","9":"-0.96164748","_rn_":"j"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+
+Un *heatmap* es una forma útil de explorar estos datos porque se
+grafican colores de acuerdo a la intensidad del valor:
+
+    library(gplots)
+    library(RColorBrewer)
+    heatmap.2(as.matrix(brand.mean),
+    col=brewer.pal(9, "GnBu") , trace="none" , key=FALSE , dend="none",
+    main="\n\n\n\n\nAtributos de la marca")
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-78-1.png)
+
+Las marcas *f* y *g* son similares, con altas calificaciones para
+*recompra* y *valor*, pero bajas calificaciones para *lo último* y
+*divertido*. Otros grupos de marcas similares son *b/c*, *i/h/d*, y
+*a/j*.
+
+### Análisis de componentes principales y mapas perceptuales
+
+    brand.pc <- prcomp(brand.sc [ , 1:9])
+    summary(brand.pc)
+
+    ## Importance of components:
+    ##                          PC1    PC2    PC3    PC4     PC5     PC6     PC7
+    ## Standard deviation     1.726 1.4479 1.0389 0.8528 0.79846 0.73133 0.62458
+    ## Proportion of Variance 0.331 0.2329 0.1199 0.0808 0.07084 0.05943 0.04334
+    ## Cumulative Proportion  0.331 0.5640 0.6839 0.7647 0.83554 0.89497 0.93831
+    ##                            PC8     PC9
+    ## Standard deviation     0.55861 0.49310
+    ## Proportion of Variance 0.03467 0.02702
+    ## Cumulative Proportion  0.97298 1.00000
+
+Un gráfico **scree** de una solución de PCA muestra la variación
+sucesiva contabilizada por cada componente. Para los datos de
+calificación de marca, la proporción se nivela en gran medida después
+del tercer componente:
+
+    plot(brand.pc , type="l")
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-80-1.png)
+
+Un **biplot** de un intento inicial de análisis de componentes
+principales para calificaciones de marcas de consumo: Aunque vemos
+agrupaciones de adjetivos en las flechas de los *loadings* en rojo, y
+obtenemos una idea de las áreas donde las clasificaciones se agrupan
+(como áreas densas de puntos de observación), el gráfico sería más útil
+si los datos se agregaran primero por marca
+
+    brand.mu.pc <- prcomp(brand.mean , scale=TRUE)
+    summary(brand.mu.pc)
+
+    ## Importance of components:
+    ##                           PC1    PC2    PC3     PC4     PC5     PC6
+    ## Standard deviation     2.1345 1.7349 0.7690 0.61498 0.50983 0.36662
+    ## Proportion of Variance 0.5062 0.3345 0.0657 0.04202 0.02888 0.01493
+    ## Cumulative Proportion  0.5062 0.8407 0.9064 0.94842 0.97730 0.99223
+    ##                            PC7     PC8     PC9
+    ## Standard deviation     0.21506 0.14588 0.04867
+    ## Proportion of Variance 0.00514 0.00236 0.00026
+    ## Cumulative Proportion  0.99737 0.99974 1.00000
+
+#### Mapas perceptuales de las marcas
+
+Un *biplot* de la solución PCA para las *calificaciones medias* da un
+mapa perceptual interpretable:
+
+    biplot(brand.mu.pc , main="Brand positioning" , cex=c(1.5 , 1))
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-82-1.png)
+
+Las posiciones variables en los componentes son consistentes con PCA en
+el conjunto completo de observaciones, y seguimos adelante para
+interpretar el gráfico.
+
+**¿Qué nos dice el mapa?**
+
+Primero, interpretamos los grupos de adjetivos y las relaciones, y vemos
+cuatro áreas con conjuntos bien diferenciados de adjetivos y marcas que
+se encuentran cerca.
+
+Las marcas *f* y *g* son altas en *valor*, por ejemplo, mientras que *a*
+y *j* son relativamente altas en *diversión*, que es opuesta en
+dirección a los adjetivos de liderazgo (*líder* y *serio*).
+
+Con este mapa, uno podría *formular preguntas* y luego consultar los
+*datos subyacentes* para responderlas.
+
+Por ejemplo, suponga que usted es el gerente de la marca *e*. ¿Qué te
+dice el mapa? Por un lado, su marca está en el centro y, por lo tanto,
+*parece no estar bien diferenciada en ninguna de las dimensiones*. Eso
+podría ser bueno o malo, dependiendo de sus objetivos estratégicos.
+
+Si su objetivo es ser una marca segura que atraiga a muchos
+consumidores, entonces podría ser deseable una posición relativamente
+indiferenciada como *e*. Por otro lado, si desea que su marca tenga una
+percepción fuerte y diferenciada, este hallazgo no sería deseado (pero
+es importante saberlo).
+
+¿Qué debe hacer con respecto a la posición de su marca *e*?
+
+Nuevamente, depende de los objetivos estratégicos. *Si desea aumentar la
+diferenciación*, una posibilidad sería tomar medidas para cambiar su
+marca en alguna dirección en el mapa. Supongamos que *desea moverse en
+la dirección de la marca c*. Puede observar las diferencias específicas
+de *c* en los datos:
+
+    brand.mean["c", ] - brand.mean["e", ]
+
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["perform"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["leader"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["latest"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["fun"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["serious"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["bargain"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["value"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["trendy"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["rebuy"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"1.214314","2":"0.9699315","3":"-0.5587936","4":"-1.140567","5":"1.180621","6":"-1.158594","7":"-0.8588416","8":"-0.113052","9":"-0.1689859","_rn_":"c"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+
+Esto muestra que *e* es **relativamente más fuerte** que *c* en *value*
+y *fun*, lo que sugiere reducir los mensajes u otros atributos que los
+refuercen (suponiendo, por supuesto, que realmente desea avanzar en la
+dirección de *c*). Del mismo modo, *c* es más fuerte en *perform* y
+*serious*, por lo que podrían ser aspectos del producto o mensaje para
+que e se fortalezca.
+
+Otra opción sería no seguir a otra marca, sino *apuntar a un espacio
+diferenciado donde ninguna marca esté posicionada*. En el biplot hay una
+gran brecha entre el grupo *b* y *c* en la parte inferior del gráfico,
+frente a *f* y *g* en la parte superior derecha. Esta área podría
+describirse como el área de *value leader* o similar.
+
+¿Cómo descubrimos cómo posicionarnos allí? Supongamos que la brecha
+refleja aproximadamente el promedio de esas cuatro marcas. Podemos
+encontrar ese promedio en las filas de las marcas, y luego tomar la
+diferencia de *e* de ese promedio:
+
+    colMeans(brand.mean[c("b", "c", "f", "g") , ]) - brand.mean["e" , ]
+
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["perform"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["leader"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["latest"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["fun"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["serious"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["bargain"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["value"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["trendy"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["rebuy"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"1.174513","2":"0.3910396","3":"-0.9372789","4":"-0.9337707","5":"0.5732131","6":"-0.2502787","7":"0.07921355","8":"-0.4695304","9":"0.6690661","_rn_":"e"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+
+Esto sugiere que la marca *e* podría apuntar a la brecha al aumentar su
+énfasis en el rendimiento (performance) al tiempo que reduce el énfasis
+en *latest* y *fun*.
+
+#### Precauciones
+
+1.  Se debe elegir el nivel y el tipo de agregación cuidadosamente.
+2.  Las relaciones son *estrictamente relativas a la categoría del
+    producto* y las marcas y adjetivos que se prueban. En una categoría
+    de producto diferente, o con diferentes marcas, los adjetivos como
+    *fun* y *lider* podrían tener una relación muy diferente. A veces,
+    simplemente *agregar o soltar una marca puede cambiar el mapa
+    resultante significativamente porque las posiciones son relativas*.
+    En otras palabras, *si una nueva marca ingresa al mercado (o el
+    análisis de uno), las otras posiciones pueden cambiar
+    sustancialmente*. También hay que confiar en que se han evaluado
+    todas las percepciones clave (adjetivos, en este ejemplo).
+
+Análisis Factorial
+------------------
+
+### Introducción
+
+Esta presentación se realiza en el marco del ramo de Métodos
+Estadísticos II. Constituye la primera de dos presentaciones que se
+realizan durante el segundo semestre 2015. El presente trabajo es
+realizado en relación al Análisis Factorial.
+
+El Análisis Factorial (AF) es una método multivariante de reducción de
+dimensionalidad. Tiene por objetivo expresar *p* variables observables
+como una combinación lineal de *m* variables lantentes, denominadas
+*factores*. El Análisis Factorial está dividido en dos: el AF
+exporatorio (AFE), y el AF confirmatorio (AFC). El primer caso se usa
+cuando el investigador no tiene ninguna hipótesis previa en cuanto a la
+relación que guarda las variables observadas con los fatores latentes.
+El segundo enfoque se utiliza cuando el investigador desea probar que un
+factor específico provee un ajuste adecuado para las correlaciones entre
+las variables observadas (<span class="citeproc-not-found"
+data-reference-id="brian">**???**</span>).
+
+La distinción entre exploratorio y confirmatorio fue tomado de la
+distinción hecha por Tuckey en sus análisis de datos (<span
+class="citeproc-not-found" data-reference-id="alan">**???**</span>). El
+AFE fue introducido por Spearman en 1904, sin embargo fue solo el inicio
+ya él solo introdujo el modelo de un factor.
+
+El AF obtiene e interpreta los factores comunes a partir de la matriz de
+correlaciones:
+
+$$
+\\mathbf{R} =
+\\left( \\begin{array}{cccc}
+1 & r\_{12} & \\cdots & r\_{1p} \\\\
+r\_{21} & 1 & \\ldots & r\_{2p} \\\\
+\\vdots & \\vdots & \\ddots & \\vdots \\\\
+r\_{p1} & r\_{p2} & \\cdots & 1 \\\\
+\\end{array} \\right)
+$$
+
+En los posterior nos referimos al AFE como AF.
+
+### Análisis Factorial Exploratorio
+
+#### Modelo Unifactorial
+
+Sean *X*<sub>1</sub>, …, *X*<sub>*p*</sub> variables observables. Este
+modelo asume un único factor *F* que recoge la covariabilidad de todas
+las variables, y *p* factores únicos
+*U*<sub>1</sub>, …, *U*<sub>*p*</sub>, uno para cada variable:
+
+1.  
+    *X*<sub>*i*</sub> = *α*<sub>*i*</sub>*F* + *d*<sub>*i*</sub>*U*<sub>*i*</sub>, *i* = 1, …, *p*
+
+Supuestos:
+
+-   Variables y factores están estandarizados.
+-   Los *p* + 1 factores están incorrelacionados
+
+Donde *α*<sub>*i*</sub> es la saturación (*loadings*) de la variable
+*X*<sub>*i*</sub> en el factor *F*. A partir de (1) se tiene que
+
+$$
+\\alpha\_{i}^{2} + d\_{i}^{2} = 1 \\nonumber \\\\
+cor(X\_i,F) = \\alpha\_i \\nonumber \\\\
+cor(X\_i,X\_j) = \\alpha\_i \\alpha\_j, \\quad i \\neq j \\nonumber
+$$
+
+Entonces *α*<sub>*i*</sub> es el coeficiente de correlación entre
+*X*<sub>*i*</sub> y el factor común. Además,
+*α*<sub>*i*</sub><sup>2</sup> tiene el nombre de *comunalidad*, denotada
+por *h*<sub>*i*</sub><sup>2</sup>, es la proporción de la variabilidad
+que se explica por *F* y la correlación entre
+*X*<sub>*i*</sub>, *X*<sub>*j*</sub> sólo depende de las saturaciones
+*α*<sub>*i*</sub>, *α*<sub>*j*</sub>
+
+### Modelo Multifactorial
+
+\#\#\#\#El modelo
+
+En este caso las *X*<sub>1</sub>, …, *X*<sub>*p*</sub> variables
+observadas dependen de *m* factores comunes (variables latentes)
+*F*<sub>1</sub>, …, *F*<sub>*p*</sub> y *p* factores únicos
+*U*<sub>1</sub>, …, *U*<sub>*p*</sub>:
+
+1.  
+    $$
+    \\begin{aligned}
+    X\_1 & = & \\alpha\_{11}F\_1 + \\cdots + \\alpha\_{1m}Fm + d\_{1}U\_{1}   \\\\
+    X\_2 & = & \\alpha\_{21}F\_1 + \\cdots + \\alpha\_{2m}Fm + d\_{2}U\_{2}  \\\\
+    \\cdots & = & \\cdots  \\cdots   \\\\
+    X\_p & = & \\alpha\_{p1}F\_1 + \\cdots + \\alpha\_{pm}Fm  + d\_{p}U\_{p} 
+    \\end{aligned}
+    $$
+
+Supuestos:
+
+1.  Los factores comunes y los factores únicos están incorrelacionados
+
+$$
+\\begin{aligned}
+cor(F\_i; F\_j) &=& 0, \\quad i \\neq j = 1, \\ldots,m,  \\\\
+cor(U\_i; U\_j) &=& 0, \\quad i \\neq j = 1, \\ldots , p.
+\\end{aligned}
+$$
+
+1.  Los factores comunes están incorrelacionados con los factores únicos
+
+$$
+\\begin{aligned}
+cor(F\_i; U\_j) &=& 0, \\quad i = 1, \\ldots , m,  j = 1, \\ldots , p.
+\\end{aligned}
+$$
+
+1.  Tanto los factores comunes como los factores únicos son variables
+    re- ducidas (media 0 y varianza 1).
+
+#### La matriz factorial
+
+Los elementos *α*<sub>*i**j*</sub> de la matriz
+**A**<sub>**p** **×** **m**</sub> son las *saturaciones* de cada
+variable *X*<sub>*i*</sub> y el factor *F*<sub>*j*</sub>:
+
+$$
+\\mathbf{A} =
+\\left( \\begin{array}{cccc}
+\\alpha\_{11} & \\cdots & \\alpha\_{1m} \\\\
+\\alpha\_{21} &  \\ldots & \\alpha\_{2m} \\\\
+\\vdots &  \\ddots & \\vdots \\\\
+\\alpha\_{p1} &  \\cdots & \\alpha\_{pm} \\\\
+\\end{array} \\right)
+$$
+
+El modelo factorial en forma matricial es:
+
+**X** **=** **A****F** **+** **D****U**,
+
+donde
+
+-   **D** = *d**i**a**g*(*d*<sub>1</sub>, …, *d*<sub>*p*</sub>) es la
+    matriz diagonal con las saturaciones entre variables y factores
+    únicos.
+
+-   **X** = (*X*<sub>1</sub>, …, *X*<sub>*p*</sub>)′
+-   **F** = (*F*<sub>1</sub>, …, *F*<sub>*m*</sub>)′
+-   **U** = (*U*<sub>1</sub>, …, *U*<sub>*p*</sub>)′
+
+El AF tiene como principal objetivo encontrar e interpretar la matriz
+factorial **A**.
+
+#### Comunalidades
+
+En el modelo AF se tiene que (<span class="citeproc-not-found"
+data-reference-id="harry">**???**</span>):
+
+*V**a**r*(*X*<sub>*i*</sub>) = *α*<sub>*i*1</sub><sup>2</sup> + ⋯ + *α*<sub>*i*2</sub><sup>2</sup> + *d*<sub>*i*</sub><sup>2</sup>
+
+de donde *α*<sub>*i**j*</sub><sup>2</sup> es la parte de la variabilidad
+de *X*<sub>*i*</sub> debida al factor *F*<sub>*j*</sub>.
+*d*<sub>*i*</sub><sup>2</sup> es la parte de la variabilidad explicada
+exclusivamente por *U*<sub>*i*</sub>.
+
+Se le llama *comunalidad* de la variable *X*<sub>*i*</sub> a:
+
+*h*<sub>*i*</sub><sup>2</sup> = *α*<sub>*i*1</sub><sup>2</sup> + ⋯ + *α*<sub>*i**p*</sub><sup>2</sup>
+
+Asimismo, el término *d*<sub>*i*</sub><sup>2</sup> es la *unicidad*.
+Luego,
+
+*v**a**r**i**a**b**i**l**i**d**a**d* = *c**o**m**u**n**a**l**i**d**a**d* + *u**n**i**c**i**d**a**d*
+
+La comunalidad es la parte de la varibilidad explicada por los factores
+comunes.
+
+Finalmente, se le llama matriz de correlaciones reducida a la matriz de
+correlaciones una vez que se sustituye las comunalidades en su diagonal:
+
+$$
+\\mathbf{R^{\*}} =
+\\left( \\begin{array}{cccc}
+h\_{1}^{2} & r\_{12} & \\cdots & r\_{1p} \\\\
+r\_{21} & h\_{2}^{2} & \\ldots & r\_{2p} \\\\
+\\vdots & \\vdots & \\ddots & \\vdots \\\\
+r\_{p1} & r\_{p2} & \\cdots & h\_{p}^{2} \\\\
+\\end{array} \\right)
+$$
+
+Se verifica entonces que:
+
+1.  
+    **R** = **R**<sup>\*</sup> + **D**<sup>2</sup>
+
+### Estimación de la matriz factorial
+
+#### Método del factor principal
+
+El objetivo es estimar la matriz factorial de modo que los factores
+expliquen la máxima varianza y sean incorrelacionados entre ellos.
+
+Si **R**<sup>**\***</sup> **=** **U****Λ****U**<sup>**′**</sup> es la
+descomposición espectral de **R**<sup>**\***</sup>; entonces la solución
+del factor principal es
+
+**A** **=** **U****Λ**<sup>**1****/****2**</sup>
+
+Una vez fijado el número *m* de factores, el algoritmo iterativo para
+obtener la matriz factorial es:
+
+-   Paso 0: **R** **=** **U****Λ****U****′** (*p* vectores propios de
+    **R**).
+
+-   Paso 1:
+
+$$
+\\left\\{ \\begin{array}{l}
+\\mathbf{A\_1} = \\mathbf{U}\_{m}^{(1)}  (\\mathbf{\\Lambda}\_m)^{1/2} \\qquad \\textrm{($m$ primeros vectores propios)}\\\\
+\\mathbf{R\_1} = diag(\\mathbf{A\_1A\_{1}^{'}}) +\\mathbf{R} - \\mathbf{I} \\qquad \\textrm{(matriz correlaciones reducida)} \\\\
+\\mathbf{R\_1} = \\mathbf{U}^{(1)} \\mathbf{\\Lambda}^{(1)} \\mathbf{U}^{(1)'} \\qquad \\textrm{(p vectores propios de $\\mathbf{R\_1}$)}
+\\end{array} \\right.
+$$
+
+-   Paso *i*
+
+$$
+\\left\\{ \\begin{array}{l}
+\\mathbf{A\_i} = \\mathbf{U}\_{m}^{(i)}  (\\mathbf{\\Lambda}\_{m}^{(i)})^{1/2} \\\\
+\\mathbf{R\_i} = diag(\\mathbf{A\_iA\_{i}^{'}}) +\\mathbf{R} - \\mathbf{I} \\qquad \\textrm{(repetir iterativamente)} \\\\
+\\mathbf{R\_i} = \\mathbf{U}^{(i)} \\mathbf{\\Lambda}^{(i)} \\mathbf{U}^{(i)'} 
+\\end{array} \\right.
+$$
+
+La matriz **A**<sub>*i*</sub> converge a la matriz factorial **A**.
+
+#### <a name="rotate"></a> Ejemplo en R
+
+La tabla de notas contiene calificaciones de 20 estudiantes en
+diferentes ramos: Ciencias Naturales (CNa), Matemáticas (Mat), Francés
+(Fra), Latín (Lat), Literatura (Lit).
+
+    Notas
+
+    ##       CNa Mat Fra Lat Lit
+    ##  [1,]   7   7   5   5   6
+    ##  [2,]   5   5   6   6   5
+    ##  [3,]   5   6   5   7   5
+    ##  [4,]   6   8   5   6   6
+    ##  [5,]   7   6   6   7   6
+    ##  [6,]   4   4   6   7   6
+    ##  [7,]   5   5   5   5   6
+    ##  [8,]   5   6   5   5   5
+    ##  [9,]   6   5   7   6   6
+    ## [10,]   6   5   6   6   6
+    ## [11,]   6   7   5   6   5
+    ## [12,]   5   5   4   5   4
+    ## [13,]   6   6   6   6   5
+    ## [14,]   8   7   8   8   8
+    ## [15,]   6   7   5   6   6
+    ## [16,]   4   3   4   4   4
+    ## [17,]   6   4   7   8   7
+    ## [18,]   6   6   7   7   7
+    ## [19,]   6   5   4   4   4
+    ## [20,]   7   7   6   7   6
+
+A continuación se aplican los pasos del algoritmo iterativo en R. Se
+asume que se desea extraer 2 factores:
+
+    # Paso 0
+    m <- 2
+    Z <- cor(Notas)
+    R = eigen(Z) # (p vectores propios de R)
+
+    # Paso 1
+    # (m primeros vectores propios)
+    A1 = R$vectors[, 1:m]%*%sqrt(diag(R$values[1:m])) 
+    # (matriz correlaciones reducida)
+    R1 = diag(diag(A1%*%t(A1))) + Z - diag(dim(Z)[1]) 
+    # (p vectores propios de R1)
+    R1 = eigen(R1) 
+    Ri <- R1
+
+    # Paso i
+    # i <- 1
+    for (i in 1:20)
+    {
+      Ai = Ri$vectors[, 1:m]%*%sqrt(diag(Ri$values[1:m])) 
+      Ri = diag(diag(Ai%*%t(Ai))) + Z - diag(dim(Z)[1]) 
+      Ri = eigen(Ri)   
+    }
+
+Asimismo, se usa una función implementada en la librería `psych` para
+realizar AF:
+
+    library(psych)
+    mod1 <- factor.pa(cor(Notas),rotate="none",nfactors = 2,fm="pa")
+
+Finalmente, se comparan los resultados obtenidos:
+
+-   Valores propios de los factores
+
+<!-- -->
+
+    Ri$values
+
+    ## [1]  2.97079743  1.03158170  0.06091878  0.01341729 -0.07571943
+
+    mod1$values
+
+    ## [1] 2.970780e+00 1.027559e+00 6.133076e-02 1.298371e-02 2.220446e-16
+
+-   Comunalidades
+
+<!-- -->
+
+    diag(Ai%*%t(Ai))
+
+    ## [1] 0.6410135 0.8803149 0.9611618 0.6933440 0.8251615
+
+    mod1$communality
+
+    ##  CNa  Mat  Fra  Lat  Lit 
+    ## 0.64 0.88 0.96 0.69 0.82
+
+-   Loadings
+
+<!-- -->
+
+    Ai
+
+    ##            [,1]       [,2]
+    ## [1,] -0.6974571  0.3931501
+    ## [2,] -0.4848866  0.8032434
+    ## [3,] -0.8959732 -0.3979871
+    ## [4,] -0.7997993 -0.2316573
+    ## [5,] -0.8982017 -0.1356290
+
+    mod1$loadings
+
+    ## 
+    ## Loadings:
+    ##     PA1    PA2   
+    ## CNa  0.698  0.395
+    ## Mat  0.484  0.801
+    ## Fra  0.896 -0.398
+    ## Lat  0.800 -0.231
+    ## Lit  0.898 -0.135
+    ## 
+    ##                  PA1   PA2
+    ## SS loadings    2.971 1.028
+    ## Proportion Var 0.594 0.206
+    ## Cumulative Var 0.594 0.800
+
+    Ri$values # Valores propios de los factores
+
+    ## [1]  2.97079743  1.03158170  0.06091878  0.01341729 -0.07571943
+
+    diag(Ai%*%t(Ai)) # Comunalidades
+
+    ## [1] 0.6410135 0.8803149 0.9611618 0.6933440 0.8251615
+
+    Ai # Loadings
+
+    ##            [,1]       [,2]
+    ## [1,] -0.6974571  0.3931501
+    ## [2,] -0.4848866  0.8032434
+    ## [3,] -0.8959732 -0.3979871
+    ## [4,] -0.7997993 -0.2316573
+    ## [5,] -0.8982017 -0.1356290
+
+Se puede apreciar que, a pesar de ligeros cambios debido a la precisión
+de la máqina, todos los valores coinciden.
+
+#### Método de la máxima verosimilitud
+
+Este método se puede apreciar como un problema de estimación de la
+matriz de covarianzas **Σ**, donde **Σ** se descompone :
+
+**Σ** = **A****A****′** + *V*
+
+Donde **V** = **D**<sup>2</sup> ((3)). Se asumen que las *n*
+observaciones de las *p* variables provienen de una distribución normal
+con **μ** **=** **0**, el logaritmo de la función de verosimilitud es:
+
+$$
+log L(\\mathbf{X},\\mathbf{\\mu},\\mathbf{\\Sigma}) = \\frac{n}{2} \\{ log|2\\pi \\Sigma| - tr(\\mathbf{\\Sigma}^{-1}\\mathbf{S})  \\}
+$$
+
+Cambiando de signo y modificando constantes, se trata de estimar **A** y
+**V** tal que
+
+*F*<sub>*p*</sub>(**A**, **V**) = *l**o**g*|**Σ**| + *t**r*(**Σ**<sup> − 1</sup>**S**) − *l**o**g*|**S**| − *p*
+
+sea mínimo, donde **S** es la matriz de covarianzas muestrales. Se
+obtienen las derivadas parciales despecto a **A** y **V**:
+
+$$
+\\frac{\\partial F\_{p}}{\\partial \\mathbf{A}} = 2\\mathbf{\\Sigma}^{-1}(\\mathbf{\\Sigma}-\\mathbf{S})\\mathbf{\\Sigma}^{-1}\\mathbf{A}, \\nonumber \\\\
+\\frac{\\partial F\_{p}}{\\partial \\mathbf{V}} = diag(\\mathbf{\\Sigma}^{-1}(\\mathbf{\\Sigma-S})\\mathbf{\\Sigma}^{-1}). \\nonumber
+$$
+
+Las ecuaciones a resolver para obtener los estimadores de **A** y **V**
+son:
+
+1.  
+    **Σ**<sup> − 1</sup>(**Σ** − **S**)**Σ**<sup> − 1</sup>**A** = **0**,  *d**i**a**g*(**Σ**<sup> − 1</sup>(**Σ** **−** **S**)**Σ**<sup> − 1</sup>) = **0**
+
+Sujeto a:
+
+**Σ** = **A****A****′** + *V*,  **A****′****V**<sup> **−** **1**</sup>**A** *e**s* *d**i**a**g**o**n**a**l*
+
+En resumen, se trata de encontrar el espacio de los factores comunes.
+Las ecuaciones en (4) no tienen solución explícita, se usa entonces un
+método iterativo.
+
+#### <a name="rotate"></a>Rotaciones de factores
+
+Obtener la matriz factorial es el primer paso del AF. El objetivo
+práctico es poder hacer alguna interpretación de los factores obtenidos.
+En gerenal, la matriz obtenida de manera directa no ofrece dicha
+interpretabilidad. Esto debido a que los factores suelen estar
+corelacionados con casi todas las variables. Es por esta razón que se
+realiza la *rotación factorial*, para poder interpretar los factores.
+Este es un procedimiento en el que, a partir de la matriz factorial, se
+obtiene la *matriz factorial rotada*, de más facil lectura.
+
+Así como existen diferentes modos de extracción de los factores, también
+los hay para realizar la rotación. En todos estos métodos las
+comunalidades y porcentaje de varianza explicada no cambia, solo cambia
+el porcentaje de varianza atribuido a cada uno de los factores. Se
+listan a continuación los más utilizados:
+
+-   *Método varimax*. Método de rotación ortogonal que minimiza el
+    número de variables que tienen saturaciones altas en cada factor.
+    Simplifica la interpretación de los factores.
+
+-   *Criterio Oblimin directo*. Método para la rotación oblicua (no
+    ortogonal). Si delta es igual a cero (el valor por defecto) las
+    soluciones son las más oblicuas. A medida que delta se va haciendo
+    más negativo, los factores son menos oblicuos. Para anular el valor
+    por defecto 0 para delta, introduzca un número menor o igual que
+    0,8.
+
+-   *Método quartimax*. Método de rotación que minimiza el número de
+    factores necesarios para explicar cada variable. Simplifica la
+    interpretación de las variables observadas.
+
+-   *Método equamax*. Método de rotación que es combinación del método
+    varimax, que simplifica los factores, y el método quartimax, que
+    simplifica las variables. Se minimiza tanto el número de variables
+    que saturan alto en un factor como el número de factores necesarios
+    para explicar una variable.
+
+-   *Rotación Promax*. Rotación oblicua que permite que los factores
+    estén correlacionados. Esta rotación se puede calcular más
+    rápidamente que una rotación oblimin directa, por lo que es útil
+    para conjuntos de datos grandes.
+
+El método más usado es *varimax*.
+
+#### Interpretación de los factores
+
+Para la interpretación de factores, se citan las sugerencias de
+Bisquerra (<span class="citeproc-not-found"
+data-reference-id="cuadras">**???**</span>):
+
+1.  Estudiar la composición de las saturaciones factoriales
+    significativas de cada factor (considerando tanto sus valores
+    positivos como negativos). Para estudiar estas saturaciones
+    factoriales, y a efectos prácticos recomienda: (1) la representación
+    gráfica de los ejes factoriales (las variables saturadas de un
+    factor aparecerán agrupadas); (2) ordenar las variables en función
+    del peso de los factores, de tal manera que en la matriz factorial
+    rotada aparezcan agrupadas las variables con ponderaciones altas
+    para el mismo factor; y (3), eliminar las saturaciones bajas
+    ocupando sus espacios con espacios blancos.
+
+2.  En aquellos casos en el que los factores incluyen variables, en
+    principio, poco significativas respecto al conjunto de las que
+    sintetizaba, se puede incluir el análisis de la representatividad de
+    la variable en cuestión en el conjunto de la estructura factorial,
+    esto es, se considerará su comunalidad.
+
+3.  Intentar dar un nombre a los factores. Éste debe adecuarse a la
+    estructura de las saturaciones, esto es, conociendo su contenido.
+    Indudablemente en esta última fase juega un importante papel el
+    marco teórico en el que debe apoyarse toda investigación.
+
+### AF: Un ejemplo en R
+
+#### Máxima Verosimilitud
+
+La función `fractanal` realiza AF usando el método de máxima
+verosimilitud. En este ejemplo se extrae 2 factores:
+
+    rownames(Notas) <- LETTERS[1:nrow(Notas)]
+    names(Notas) <- c("CNa","Mat","Fra","Lat","Lit")
+
+    # Análisis Factorial con Máxima Verosimilitud
+    # entra los datos y se extrae 3 factores, 
+    # se usa la rotación VARIMAX 
+    fit <- factanal(Notas, 2, rotation="varimax")
+    print(fit, digits=2, cutoff=.3, sort=TRUE)
+
+    ## 
+    ## Call:
+    ## factanal(x = Notas, factors = 2, rotation = "varimax")
+    ## 
+    ## Uniquenesses:
+    ##  CNa  Mat  Fra  Lat  Lit 
+    ## 0.38 0.00 0.04 0.29 0.21 
+    ## 
+    ## Loadings:
+    ##     Factor1 Factor2
+    ## Fra 0.98           
+    ## Lat 0.82           
+    ## Lit 0.85           
+    ## CNa 0.46    0.64   
+    ## Mat         1.00   
+    ## 
+    ##                Factor1 Factor2
+    ## SS loadings       2.56    1.52
+    ## Proportion Var    0.51    0.30
+    ## Cumulative Var    0.51    0.82
+    ## 
+    ## Test of the hypothesis that 2 factors are sufficient.
+    ## The chi square statistic is 1.23 on 1 degree of freedom.
+    ## The p-value is 0.268
+
+    # gráfico de factor1 vs factor2 
+    load <- fit$loadings[,1:2] 
+    plot(load,type="n") # Gráfico de los factores
+    text(load,labels=names(Notas),cex=.7) # Agrego los nombres de variables
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-94-1.png)
+
+La opción `rotation` incluye `"varimax"`, `"promax"`, `"none"`. Se
+agrega la opción `scores="regression"` o `"Barlett"` para generar los
+factores. Se usa la opción `covmat` para ingresar la matriz de
+correlación o covarianza directamente.
+
+#### Método del factor principal
+
+En la [sección](@ejR) se realizó una primera aproximación de este
+método. Se abroda un par de detalles más en este ejemplo. La función
+`factor.pa` en el paquete `psych` incluye varias opciones de estimación
+de la matriz factorial, entre ellas, el método del factor principal.
+
+    # Método del factor principal
+    library(psych)
+    fit <- factor.pa(Notas, nfactors=2, rotate="varimax")
+    fit # Imprimo los resultados
+
+    ## Factor Analysis using method =  pa
+    ## Call: factor.pa(r = Notas, nfactors = 2, rotate = "varimax")
+    ## Unstandardized loadings (pattern matrix) based upon covariance matrix
+    ##      PA1  PA2   h2   u2   H2   U2
+    ## CNa 0.42 0.68 0.64 0.36 0.64 0.36
+    ## Mat 0.04 0.93 0.88 0.12 0.88 0.12
+    ## Fra 0.98 0.08 0.96 0.04 0.96 0.04
+    ## Lat 0.81 0.18 0.69 0.31 0.69 0.31
+    ## Lit 0.85 0.31 0.82 0.18 0.82 0.18
+    ## 
+    ##                        PA1  PA2
+    ## SS loadings           2.53 1.47
+    ## Proportion Var        0.50 0.29
+    ## Cumulative Var        0.50 0.80
+    ## Proportion Explained  0.63 0.37
+    ## Cumulative Proportion 0.63 1.00
+    ## 
+    ##  Standardized loadings (pattern matrix)
+    ##     item  PA1  PA2   h2   u2
+    ## CNa    1 0.42 0.68 0.64 0.36
+    ## Mat    2 0.04 0.94 0.88 0.12
+    ## Fra    3 0.98 0.08 0.96 0.04
+    ## Lat    4 0.81 0.18 0.69 0.31
+    ## Lit    5 0.85 0.31 0.82 0.18
+    ## 
+    ##                  PA1  PA2
+    ## SS loadings     2.52 1.47
+    ## Proportion Var  0.50 0.29
+    ## Cumulative Var  0.50 0.80
+    ## Cum. factor Var 0.63 1.00
+    ## 
+    ## Mean item complexity =  1.2
+    ## Test of the hypothesis that 2 factors are sufficient.
+    ## 
+    ## The degrees of freedom for the null model are  10  and the objective function was  3.66 with Chi Square of  60.31
+    ## The degrees of freedom for the model are 1  and the objective function was  0.11 
+    ## 
+    ## The root mean square of the residuals (RMSR) is  0.02 
+    ## The df corrected root mean square of the residuals is  0.07 
+    ## 
+    ## The harmonic number of observations is  20 with the empirical chi square  0.19  with prob <  0.66 
+    ## The total number of observations was  20  with Likelihood Chi Square =  1.62  with prob <  0.2 
+    ## 
+    ## Tucker Lewis Index of factoring reliability =  0.863
+    ## RMSEA index =  0.233  and the 90 % confidence intervals are  0 0.67
+    ## BIC =  -1.37
+    ## Fit based upon off diagonal values = 1
+    ## Measures of factor score adequacy             
+    ##                                                    PA1  PA2
+    ## Correlation of (regression) scores with factors   0.98 0.94
+    ## Multiple R square of scores with factors          0.97 0.89
+    ## Minimum correlation of possible factor scores     0.94 0.78
+
+Los datos de entrada puede ser la matriz de datos original o la matriz
+de covarianza/correlación. Las rotaciones pueden ser todas las
+mecionadas en [esta sección](#rotate), entre otras.
+
+#### Determinar el número de factores
+
+Una decisión crucial en el AF es determinar el número de factores a
+extraerse. El paquete \`nFactors ofrece un conjunto de rutinas para
+direccionar esta decisión. Desde luego, cualquier solución factorial
+debe ser interpretable para ser de utilidad.
+
+    # Determinar el # de factores a extraer
+    library(nFactors)
+    ev <- eigen(cor(Notas)) # obtiene los eigenvalues
+    ap <- parallel(subject=nrow(Notas),var=ncol(Notas),
+      rep=100,cent=.05)
+    nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+    plotnScree(nS)
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-96-1.png)
+
+En este caso, se sugiere que el número de factores sea 2.
+
+\#\#\#\#Más recursos en R
+
+El paquete `FactoMineR` ofrece un gran número de funciones para AF.
+Incluye el uso de variables cualitativas y cuantitativas. Aquí un
+ejemplo de los tipos de gráficos que se puede crear con este paquete:
+
+    # PCA Variable Factor Map 
+    library(FactoMineR)
+    result <- PCA(Notas,graph=FALSE)
+    plot(result,choix="var")
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-97-1.png)
+
+Finalmente, el paquete `GPARotation` ofrece un gran número de opciones
+de rotación.
 
 Referencias
 ===========
