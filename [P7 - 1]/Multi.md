@@ -867,9 +867,9 @@ discriminante**.
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##            Df  Sum Sq Mean Sq      F N.Perm Pr(>F)   
-    ## Groups      2  190082   95041 8.3286    999  0.002 **
-    ## Residuals 175 1997003   11411                        
+    ##            Df  Sum Sq Mean Sq      F N.Perm Pr(>F)    
+    ## Groups      2  190082   95041 8.3286    999  0.001 ***
+    ## Residuals 175 1997003   11411                         
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1089,7 +1089,7 @@ Realizamos un gráfico de los datos:
     ## 
     ## Response: Distances
     ##           Df Sum Sq Mean Sq      F N.Perm Pr(>F)
-    ## Groups     2   6224  3112.0 2.4009    999    0.1
+    ## Groups     2   6224  3112.0 2.4009    999  0.101
     ## Residuals 82 106285  1296.2
 
 Conclusión: no rechazo la hipótesis nula de homogeneidad intra-grupo.
@@ -2667,11 +2667,6 @@ Análisis Factorial
 
 ### Introducción
 
-Esta presentación se realiza en el marco del ramo de Métodos
-Estadísticos II. Constituye la primera de dos presentaciones que se
-realizan durante el segundo semestre 2015. El presente trabajo es
-realizado en relación al Análisis Factorial.
-
 El Análisis Factorial (AF) es una método multivariante de reducción de
 dimensionalidad. Tiene por objetivo expresar *p* variables observables
 como una combinación lineal de *m* variables lantentes, denominadas
@@ -2681,12 +2676,10 @@ cuando el investigador no tiene ninguna hipótesis previa en cuanto a la
 relación que guarda las variables observadas con los fatores latentes.
 El segundo enfoque se utiliza cuando el investigador desea probar que un
 factor específico provee un ajuste adecuado para las correlaciones entre
-las variables observadas (<span class="citeproc-not-found"
-data-reference-id="brian">**???**</span>).
+las variables observadas (Everitt 2011).
 
 La distinción entre exploratorio y confirmatorio fue tomado de la
-distinción hecha por Tuckey en sus análisis de datos (<span
-class="citeproc-not-found" data-reference-id="alan">**???**</span>). El
+distinción hecha por Tuckey en sus análisis de datos (Izenman 2008). El
 AFE fue introducido por Spearman en 1904, sin embargo fue solo el inicio
 ya él solo introdujo el modelo de un factor.
 
@@ -2815,8 +2808,7 @@ factorial **A**.
 
 #### Comunalidades
 
-En el modelo AF se tiene que (<span class="citeproc-not-found"
-data-reference-id="harry">**???**</span>):
+En el modelo AF se tiene que (Harman 1968):
 
 *V**a**r*(*X*<sub>*i*</sub>) = *α*<sub>*i*1</sub><sup>2</sup> + ⋯ + *α*<sub>*i*2</sub><sup>2</sup> + *d*<sub>*i*</sub><sup>2</sup>
 
@@ -3124,8 +3116,7 @@ El método más usado es *varimax*.
 #### Interpretación de los factores
 
 Para la interpretación de factores, se citan las sugerencias de
-Bisquerra (<span class="citeproc-not-found"
-data-reference-id="cuadras">**???**</span>):
+Bisquerra (Cuadras 2014):
 
 1.  Estudiar la composición de las saturaciones factoriales
     significativas de cada factor (considerando tanto sus valores
@@ -3308,6 +3299,17 @@ de rotación.
 
 Referencias
 ===========
+
+Cuadras, C. 2014. *Nuevos Métodos de Análisis Multivariante*. CMC
+Editions, España.
+
+Everitt, B. 2011. *An Introduction to Applied Multivariate Analysis with
+R*. Springer.
+
+Harman, H. 1968. *Modern Factor Analysis*. University of Chicago Press.
+
+Izenman, A. 2008. *Modern Multivariate Statistical Techniques*.
+Springer.
 
 Mardia, Kanti, J. Kent, and J. Bibby. 1979. *Multivariate Analysis*.
 First. New York: Academic Press.
