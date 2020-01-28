@@ -5,6 +5,8 @@
 -   [Análisis de componentes
     principales](#analisis-de-componentes-principales)
 -   [Análisis Factorial](#analisis-factorial)
+-   [Escalamiento Multidimensional](#escalamiento-multidimensional)
+-   [Árboles de decisión](#arboles-de-decision)
 -   [Referencias](#referencias)
 
 <script type="text/x-mathjax-config">
@@ -1088,9 +1090,11 @@ Realizamos un gráfico de los datos:
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##           Df Sum Sq Mean Sq      F N.Perm Pr(>F)
-    ## Groups     2   6224  3112.0 2.4009    999  0.101
-    ## Residuals 82 106285  1296.2
+    ##           Df Sum Sq Mean Sq      F N.Perm Pr(>F)  
+    ## Groups     2   6224  3112.0 2.4009    999  0.087 .
+    ## Residuals 82 106285  1296.2                       
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Conclusión: no rechazo la hipótesis nula de homogeneidad intra-grupo.
 
@@ -3297,6 +3301,769 @@ ejemplo de los tipos de gráficos que se puede crear con este paquete:
 Finalmente, el paquete `GPARotation` ofrece un gran número de opciones
 de rotación.
 
+Escalamiento Multidimensional
+-----------------------------
+
+-   Es una generalización de la idea de componentes principales.
+
+-   Se dispone de una matriz **D**<sub>*n* × *n*</sub> de distancias o
+    disimilaridades entre los *n* elementos de un conjunto.
+
+-   Estas distancias pueden haberse obtenido a partir de ciertas
+    variables, o pueden **ser el resultado de una estimación directa**,
+    por ejemplo preguntando a un grupo de jueces por sus opiniones sobre
+    las **similaridades entre los elementos considerados**.
+
+<!-- -->
+
+    brand.dist <- dist(brand.mean)
+
+MDS métrico:
+
+    brand.mds <- cmdscale(brand.dist,k = 2)
+
+    B = as.matrix(brand.dist)
+    H = diag(nrow(B))-1/nrow(B)*matrix(1,ncol = nrow(B),nrow = nrow(B))
+    B = H%*%(B^2)%*%H
+    B
+
+    ##              [,1]         [,2]       [,3]       [,4]        [,5]
+    ##  [1,] -6.43841712   6.62068241  6.1114913 -2.7313789 -1.68429243
+    ##  [2,]  6.62068241 -11.02829122 -7.8783206  3.5236372  0.05561687
+    ##  [3,]  6.11149130  -7.87832063 -9.1486956  2.2832475  1.81626222
+    ##  [4,] -2.73137886   3.52363723  2.2832475 -7.7687895  0.67086562
+    ##  [5,] -1.68429243   0.05561687  1.8162622  0.6708656 -2.30601980
+    ##  [6,]  2.59894964  -0.27431143 -0.2544496  8.0127210 -0.63183375
+    ##  [7,]  1.63821419   1.56333935  1.9865331  8.5571526  0.83980418
+    ##  [8,] -1.15979104   0.96667919  0.5785245 -5.8204759  0.50202400
+    ##  [9,] -0.06919299   0.18731553  0.3433005 -3.5542537  0.74898547
+    ## [10,] -4.88626512   6.26365270  4.1621066 -3.1727261 -0.01141239
+    ##              [,6]        [,7]       [,8]        [,9]       [,10]
+    ##  [1,]   2.5989496   1.6382142 -1.1597910 -0.06919299 -4.88626512
+    ##  [2,]  -0.2743114   1.5633394  0.9666792  0.18731553  6.26365270
+    ##  [3,]  -0.2544496   1.9865331  0.5785245  0.34330052  4.16210661
+    ##  [4,]   8.0127210   8.5571526 -5.8204759 -3.55425365 -3.17272611
+    ##  [5,]  -0.6318338   0.8398042  0.5020240  0.74898547 -0.01141239
+    ##  [6,] -12.7527758 -12.5475380  7.8403698  5.06580894  2.94305902
+    ##  [7,] -12.5475380 -17.8747191  8.9456146  4.99563489  1.89596412
+    ##  [8,]   7.8403698   8.9456146 -6.2827131 -4.07013708 -1.50009500
+    ##  [9,]   5.0658089   4.9956349 -4.0701371 -3.26864529 -0.37881633
+    ## [10,]   2.9430590   1.8959641 -1.5000950 -0.37881633 -5.31546752
+
+    x = B
+
+    e = eigen(-x/2, symmetric = TRUE)
+    k = 2
+    n = nrow(as.matrix(brand.dist))
+    ev = e$values[seq_len(k)]
+    evec = e$vectors[,seq_len(k)]
+    points <- evec * rep(sqrt(ev), each=n)
+    plot(points)
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-99-1.png)
+
+    plot(brand.mds)
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-99-2.png)
+
+    plot(brand.mds , type="n")
+    text(brand.mds , rownames(brand.mds) , cex =2)
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-100-1.png)
+
+No métrico:
+
+    brand.rank <- data.frame(lapply(brand.mean , function(x) ordered(rank(x))))
+    str(brand.rank)
+
+    ## 'data.frame':    10 obs. of  9 variables:
+    ##  $ perform: Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 1 10 8 2 4 5 9 6 7 3
+    ##  $ leader : Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 3 9 10 2 7 8 6 5 4 1
+    ##  $ latest : Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 7 10 4 5 8 2 1 9 6 3
+    ##  $ fun    : Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 9 1 2 5 7 4 3 10 8 6
+    ##  $ serious: Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 1 9 10 2 7 8 4 6 5 3
+    ##  $ bargain: Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 7 6 3 1 8 9 10 2 4 5
+    ##  $ value  : Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 7 6 4 1 8 9 10 3 2 5
+    ##  $ trendy : Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 3 9 5 8 6 2 1 10 7 4
+    ##  $ rebuy  : Ord.factor w/ 10 levels "1"<"2"<"3"<"4"<..: 3 8 6 4 7 9 10 2 5 1
+
+    library(cluster)
+    brand.dist.r <- daisy(brand.rank , metric="gower")
+
+    brand.mds.r <- isoMDS(brand.dist.r)
+
+    ## initial  value 9.063777 
+    ## iter   5 value 7.918224
+    ## iter  10 value 7.772503
+    ## final  value 7.655470 
+    ## converged
+
+    plot(brand.mds.r$points , type="n")
+    text(brand.mds.r$points , levels(brand.sc$brand) , cex =2)
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-103-1.png)
+
+Árboles de decisión
+-------------------
+
+Para ilustrar el proceso de construcción del árbol, consideremos un
+ejemplo simple. Imagine que está trabajando para un estudio de cine de
+Hollywood, y su escritorio está repleto de guiones. En lugar de leer
+cada uno de principio a fin, usted decide desarrollar un algoritmo de
+árbol de decisión para predecir si una película potencial podría
+clasificarse en una de tres categorías:
+
+-   impacto mainstream,
+-   amado por la crítica (critic’s choice) o
+-   fracaso de taquilla (box office bust).
+
+Después de revisar los datos de 30 guiones de películas diferentes,
+surge un patrón. Parece haber una relación entre el **presupuesto** de
+rodaje propuesto por la película, el **número de celebridades** de la
+*A* para los papeles protagónicos y las categorías de éxito.
+
+<figure>
+<img src="Figures/im1.png" alt="Presupuesto vs Num de celebridades" style="width:60.0%" /><figcaption>Presupuesto vs Num de celebridades</figcaption>
+</figure>Para construir un árbol de decisión simple usando esta
+información, podemos aplicar una estrategia de *dividir y vencer*.
+
+<figure>
+<img src="Figures/im2.png" alt="Splits" style="width:80.0%" /><figcaption><em>Splits</em></figcaption>
+</figure>Resultado:
+
+<figure>
+<img src="Figures/im3.png" alt="Splits" style="width:60.0%;height:60.0%" /><figcaption><em>Splits</em></figcaption>
+</figure>Es posible que hayas notado que las líneas diagonales podrían
+> haber dividido los datos aún más limpiamente. Esta es una limitación
+> de del árbol de decisiones, que **utiliza divisiones paralelas a los
+> ejes**. El hecho de que cada división considere **una característica a
+> la vez** evita que el árbol de decisiones forme **decisiones más
+> complejas**, como “si el número de celebridades es mayor que el
+> presupuesto estimado, entonces será un éxito crítico”.
+
+Entonces, ¿qué es un árbol de decisión?
+
+-   El modelo en sí mismo comprende una serie de decisiones lógicas,
+    similares a un diagrama de flujo, con nodos de decisión que indican
+    una decisión sobre un atributo. Estos se dividen en ramas que
+    indican las elecciones de la decisión. El árbol termina con *nodos
+    de hoja* o *leaf nodes* (también conocidos como nodos terminales)
+    que denotan el resultado de seguir una combinación de decisiones.
+
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fortalezas</th>
+<th>Debilidades</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Un clasificador multiuso que funciona bien en la mayoría de los problemas</td>
+<td>Los modelos de árbol de decisión a menudo están sesgados hacia divisiones en características que tienen una gran cantidad de niveles</td>
+</tr>
+<tr class="even">
+<td>El proceso de aprendizaje altamente automático puede manejar características numéricas o nominales, datos faltantes</td>
+<td>Es fácil sobreajustar o ajustar el modelo</td>
+</tr>
+<tr class="odd">
+<td>Utiliza solo las características más importantes</td>
+<td>Puede tener problemas para modelar algunas relaciones debido a la dependencia de divisiones paralelas al eje</td>
+</tr>
+<tr class="even">
+<td>Se puede usar en datos con relativamente pocos ejemplos de entrenamiento o un número muy grande</td>
+<td>Pequeños cambios en los datos de entrenamiento pueden generar grandes cambios en la lógica de decisión</td>
+</tr>
+<tr class="odd">
+<td>Resultados en un modelo que puede interpretarse sin un fondo matemático (para árboles relativamente pequeños)</td>
+<td>Los árboles grandes pueden ser difíciles de interpretar y las decisiones que toman pueden parecer contradictorias</td>
+</tr>
+<tr class="even">
+<td>Más eficiente que otros modelos complejos</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+### Elegir la *mejor* partición
+
+**Entropía**
+
+> La entropía de una muestra de datos indica qué tan mezclados están los
+> valores de clase; el valor mínimo de 0 indica que la muestra es
+> completamente homogénea, mientras que 1 indica la cantidad máxima de
+> desorden.
+
+$$
+Entropy(S) = \\sum\_{i=1}^{c}-p\_ilog\_2(p\_i)
+$$
+
+En la fórmula de entropía, para un segmento dado de datos (*S*), el
+término *c* se refiere al número de diferentes **niveles de clase**, y
+*p*<sub>*i*</sub> se refiere a la proporción de valores que caen en el
+nivel de clase *i*. Por ejemplo, supongamos que tenemos una partición de
+datos con dos clases: rojo (60 por ciento) y blanco (40 por ciento).
+Podemos calcular la entropía como:
+
+    -0.60 * log2(0.60) - 0.40 * log2(0.40)
+
+    ## [1] 0.9709506
+
+Podemos examinar la entropía para todos los posibles arreglos de dos
+clases. Si sabemos que la proporción de ejemplos en una clase es *x*,
+entonces la proporción en la otra clase es 1 − *x*. Usando la función
+`curve()`, podemos trazar la entropía para todos los valores posibles de
+*x*:
+
+    curve(-x * log2(x) - (1 - x) * log2(1 - x),col="red", xlab = "x", ylab = "Entropía", lwd=4)
+
+![](Multi_files/figure-markdown_strict/unnamed-chunk-105-1.png)
+
+Como se ilustra por el pico en entropía en *x* = 0.50, una división
+50 − 50 da como resultado la **entropía máxima**. A medida que una clase
+domina cada vez más a la otra, la entropía se reduce a cero.
+
+Dada esta medida de pureza (como la entropía), el algoritmo aún debe
+**decidir qué característica dividir**. Para esto, el algoritmo usa la
+entropía para calcular el cambio en la homogeneidad resultante de una
+división en cada característica posible. El cálculo se conoce como
+**ganancia de información**. La ganancia de información para una
+característica *F* se calcula como la diferencia entre la entropía en el
+segmento antes de la división (*S*<sub>1</sub>) y las particiones
+resultantes de la división (*S*<sub>2</sub>)
+
+*I**n**f**o**G**a**i**n*(*F*) = *E**n**t**r**o**p**y*(*S*<sub>1</sub>) − *E**n**t**r**o**p**y*(*S*<sub>2</sub>)
+
+Cuanto mayor sea la ganancia de información, mejor será una función para
+crear grupos homogéneos después de una división en esa función.
+
+> Aunque es utilizado por C5.0, la **ganancia de información no es el
+> único** criterio de división que se puede usar para construir árboles
+> de decisión. Otros criterios comúnmente utilizados son el **índice de
+> Gini**, la estadística **Chi-cuadrado** y la **relación de ganancia**.
+> Para profundizar en estos criterios revisa: Mingers (1989)
+
+### Ejemplo: Identificando el riesgo de un préstamo
+
+#### Paso 1: recopilación de datos
+
+Los datos representan los préstamos obtenidos de una agencia de crédito
+en Alemania.
+
+    uu <- "https://github.com/vmoprojs/DataLectures/blob/master/credit.RData?raw=true"
+    library(repmis)
+    source_data(uu)
+
+    ## [1] "credit"
+
+    str(credit)
+
+    ## 'data.frame':    1000 obs. of  17 variables:
+    ##  $ checking_balance    : Factor w/ 4 levels "< 0 DM","> 200 DM",..: 1 3 4 1 1 4 4 3 4 3 ...
+    ##  $ months_loan_duration: int  6 48 12 42 24 36 24 36 12 30 ...
+    ##  $ credit_history      : Factor w/ 5 levels "critical","good",..: 1 2 1 2 4 2 2 2 2 1 ...
+    ##  $ purpose             : Factor w/ 6 levels "business","car",..: 5 5 4 5 2 4 5 2 5 2 ...
+    ##  $ amount              : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...
+    ##  $ savings_balance     : Factor w/ 5 levels "< 100 DM","> 1000 DM",..: 5 1 1 1 1 5 4 1 2 1 ...
+    ##  $ employment_duration : Factor w/ 5 levels "< 1 year","> 7 years",..: 2 3 4 4 3 3 2 3 4 5 ...
+    ##  $ percent_of_income   : int  4 2 2 2 3 2 3 2 2 4 ...
+    ##  $ years_at_residence  : int  4 2 3 4 4 4 4 2 4 2 ...
+    ##  $ age                 : int  67 22 49 45 53 35 53 35 61 28 ...
+    ##  $ other_credit        : Factor w/ 3 levels "bank","none",..: 2 2 2 2 2 2 2 2 2 2 ...
+    ##  $ housing             : Factor w/ 3 levels "other","own",..: 2 2 2 1 1 1 2 3 2 2 ...
+    ##  $ existing_loans_count: int  2 1 1 1 2 1 1 1 1 2 ...
+    ##  $ job                 : Factor w/ 4 levels "management","skilled",..: 2 2 4 2 2 4 2 1 4 1 ...
+    ##  $ dependents          : int  1 1 2 2 2 2 1 1 1 1 ...
+    ##  $ phone               : Factor w/ 2 levels "no","yes": 2 1 1 1 1 2 1 2 1 1 ...
+    ##  $ default             : Factor w/ 2 levels "no","yes": 1 2 1 1 2 1 1 1 1 2 ...
+
+El conjunto de datos crediticios incluye 1000 ejemplos de préstamos, más
+una combinación de características numéricas y nominales que indican las
+características del préstamo y del solicitante del préstamo.
+
+Una variable indica si el préstamo **entró en default**. Veamos si
+podemos determinar un patrón que prediga este resultado.
+
+#### Paso 2: Explorar y preparar los datos
+
+Veamos algunos de los resultados de `table()` para un par de
+características de préstamos que **parecen predecir un incumplimiento**.
+Las características `checking_balance` y `savings_balance` indican el
+saldo de la cuenta de cheques y de ahorros del solicitante, y se
+registran como variables categóricas:
+
+    table(credit$checking_balance)
+
+    ## 
+    ##     < 0 DM   > 200 DM 1 - 200 DM    unknown 
+    ##        274         63        269        394
+
+    table(credit$savings_balance)
+
+    ## 
+    ##      < 100 DM     > 1000 DM  100 - 500 DM 500 - 1000 DM       unknown 
+    ##           603            48           103            63           183
+
+Dado que los datos del préstamo se obtuvieron de Alemania, la moneda se
+registra en *Deutsche Marks (DM)*. Parece una suposición válida que los
+saldos de cuentas corrientes y de **ahorro más grandes** deberían estar
+relacionados con una **menor posibilidad de impago** del préstamo.
+
+Algunas de las funciones del préstamo son numéricas, como su plazo
+(`months_loan_duration`) y el monto de crédito solicitado (`amount`).
+
+    summary(credit$months_loan_duration)
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##     4.0    12.0    18.0    20.9    24.0    72.0
+
+    summary(credit$amount)
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##     250    1366    2320    3271    3972   18424
+
+Los montos de los préstamos oscilaron entre 250 DM y 18420 DM a plazos
+de 4 a 72 meses, con una duración media de 18 meses y un monto de 2320
+DM.
+
+La variable `default` indica si el solicitante del préstamo no pudo
+cumplir con los términos de pago acordados y entró en incumplimiento. Un
+total del 30 por ciento de los préstamos entraron en mora:
+
+    table(credit$default)
+
+    ## 
+    ##  no yes 
+    ## 700 300
+
+Una alta tasa de incumplimiento no es deseable para un banco porque
+significa que es poco probable que el banco recupere completamente su
+inversión. Si tenemos éxito, nuestro **modelo identificará a los
+solicitantes que es probable que presenten un incumplimiento**, tal que
+este número se pueda reducir.
+
+**Creamos el conjunto de entrenamiento y de prueba**
+
+1.  ordenar al azar su data de crédito antes de dividir.
+
+<!-- -->
+
+    set.seed(12345)
+    credit_rand <- credit[order(runif(1000)), ]
+
+Confirmemos que los datos no han cambiado
+
+    summary(credit$amount)
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##     250    1366    2320    3271    3972   18424
+
+    summary(credit_rand$amount)
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##     250    1366    2320    3271    3972   18424
+
+1.  Ahora, podemos dividir los datos en entrenamiento (90 por ciento o
+    900 registros) y datos de prueba (10 por ciento o 100 registros)
+
+<!-- -->
+
+    credit_train <- credit_rand[1:900, ]
+    credit_test <- credit_rand[901:1000, ]
+
+Si todo salió bien, deberíamos tener alrededor del 30 por ciento de los
+préstamos impagos en cada uno de los conjuntos de datos.
+
+    prop.table(table(credit_train$default))
+
+    ## 
+    ##        no       yes 
+    ## 0.7022222 0.2977778
+
+    prop.table(table(credit_test$default))
+
+    ## 
+    ##   no  yes 
+    ## 0.68 0.32
+
+#### Paso 3: entrenar un modelo en los datos
+
+La columna 17 en `credit_train` es la variable `default`, por lo que
+debemos excluirla del marco de datos de entrenamiento como una variable
+independiente, pero suministrarla como dependiente para la
+clasificación:
+
+    library(C50)
+    credit_model <- C5.0(credit_train[-17], credit_train$default)
+    credit_model
+
+    ## 
+    ## Call:
+    ## C5.0.default(x = credit_train[-17], y = credit_train$default)
+    ## 
+    ## Classification Tree
+    ## Number of samples: 900 
+    ## Number of predictors: 16 
+    ## 
+    ## Tree size: 67 
+    ## 
+    ## Non-standard options: attempt to group attributes
+
+`Tree size` indica que el árbol tiene 67 decisiones de profundidad. Para
+mirar las decisiones, usamos `summary`
+
+    summary(credit_model)
+
+    ## 
+    ## Call:
+    ## C5.0.default(x = credit_train[-17], y = credit_train$default)
+    ## 
+    ## 
+    ## C5.0 [Release 2.07 GPL Edition]      Tue Jan 28 02:22:35 2020
+    ## -------------------------------
+    ## 
+    ## Class specified by attribute `outcome'
+    ## 
+    ## Read 900 cases (17 attributes) from undefined.data
+    ## 
+    ## Decision tree:
+    ## 
+    ## checking_balance = unknown: no (358/44)
+    ## checking_balance in {< 0 DM,> 200 DM,1 - 200 DM}:
+    ## :...credit_history in {perfect,very good}:
+    ##     :...dependents > 1: yes (10/1)
+    ##     :   dependents <= 1:
+    ##     :   :...savings_balance = < 100 DM: yes (39/11)
+    ##     :       savings_balance in {> 1000 DM,500 - 1000 DM,unknown}: no (8/1)
+    ##     :       savings_balance = 100 - 500 DM:
+    ##     :       :...checking_balance = < 0 DM: no (1)
+    ##     :           checking_balance in {> 200 DM,1 - 200 DM}: yes (5/1)
+    ##     credit_history in {critical,good,poor}:
+    ##     :...months_loan_duration <= 11: no (87/14)
+    ##         months_loan_duration > 11:
+    ##         :...savings_balance = > 1000 DM: no (13)
+    ##             savings_balance in {< 100 DM,100 - 500 DM,500 - 1000 DM,unknown}:
+    ##             :...checking_balance = > 200 DM:
+    ##                 :...dependents > 1: yes (3)
+    ##                 :   dependents <= 1:
+    ##                 :   :...credit_history in {good,poor}: no (23/3)
+    ##                 :       credit_history = critical:
+    ##                 :       :...amount <= 2337: yes (3)
+    ##                 :           amount > 2337: no (6)
+    ##                 checking_balance = 1 - 200 DM:
+    ##                 :...savings_balance = unknown: no (34/6)
+    ##                 :   savings_balance in {< 100 DM,100 - 500 DM,500 - 1000 DM}:
+    ##                 :   :...months_loan_duration > 45: yes (11/1)
+    ##                 :       months_loan_duration <= 45:
+    ##                 :       :...other_credit = store:
+    ##                 :           :...age <= 35: yes (4)
+    ##                 :           :   age > 35: no (2)
+    ##                 :           other_credit = bank:
+    ##                 :           :...years_at_residence <= 1: no (3)
+    ##                 :           :   years_at_residence > 1:
+    ##                 :           :   :...existing_loans_count <= 1: yes (5)
+    ##                 :           :       existing_loans_count > 1:
+    ##                 :           :       :...percent_of_income <= 2: no (4/1)
+    ##                 :           :           percent_of_income > 2: yes (3)
+    ##                 :           other_credit = none:
+    ##                 :           :...job = unemployed: no (1)
+    ##                 :               job = management:
+    ##                 :               :...amount <= 7511: no (10/3)
+    ##                 :               :   amount > 7511: yes (7)
+    ##                 :               job = unskilled: [S1]
+    ##                 :               job = skilled:
+    ##                 :               :...dependents <= 1: no (55/15)
+    ##                 :                   dependents > 1:
+    ##                 :                   :...age <= 34: no (3)
+    ##                 :                       age > 34: yes (4)
+    ##                 checking_balance = < 0 DM:
+    ##                 :...job = management: no (26/6)
+    ##                     job = unemployed: yes (4/1)
+    ##                     job = unskilled:
+    ##                     :...employment_duration in {4 - 7 years,
+    ##                     :   :                       unemployed}: no (4)
+    ##                     :   employment_duration = < 1 year:
+    ##                     :   :...other_credit = bank: no (1)
+    ##                     :   :   other_credit in {none,store}: yes (11/2)
+    ##                     :   employment_duration = > 7 years:
+    ##                     :   :...other_credit in {bank,none}: no (5/1)
+    ##                     :   :   other_credit = store: yes (2)
+    ##                     :   employment_duration = 1 - 4 years:
+    ##                     :   :...age <= 39: no (14/3)
+    ##                     :       age > 39:
+    ##                     :       :...credit_history in {critical,good}: yes (3)
+    ##                     :           credit_history = poor: no (1)
+    ##                     job = skilled:
+    ##                     :...credit_history = poor:
+    ##                         :...savings_balance in {< 100 DM,100 - 500 DM,
+    ##                         :   :                   500 - 1000 DM}: yes (8)
+    ##                         :   savings_balance = unknown: no (1)
+    ##                         credit_history = critical:
+    ##                         :...other_credit = store: no (0)
+    ##                         :   other_credit = bank: yes (4)
+    ##                         :   other_credit = none:
+    ##                         :   :...savings_balance in {100 - 500 DM,
+    ##                         :       :                   unknown}: no (1)
+    ##                         :       savings_balance = 500 - 1000 DM: yes (1)
+    ##                         :       savings_balance = < 100 DM:
+    ##                         :       :...months_loan_duration <= 13:
+    ##                         :           :...percent_of_income <= 3: yes (3)
+    ##                         :           :   percent_of_income > 3: no (3/1)
+    ##                         :           months_loan_duration > 13:
+    ##                         :           :...amount <= 5293: no (10/1)
+    ##                         :               amount > 5293: yes (2)
+    ##                         credit_history = good:
+    ##                         :...existing_loans_count > 1: yes (5)
+    ##                             existing_loans_count <= 1:
+    ##                             :...other_credit = store: no (2)
+    ##                                 other_credit = bank:
+    ##                                 :...percent_of_income <= 2: yes (2)
+    ##                                 :   percent_of_income > 2: no (6/1)
+    ##                                 other_credit = none: [S2]
+    ## 
+    ## SubTree [S1]
+    ## 
+    ## employment_duration in {< 1 year,1 - 4 years}: yes (11/3)
+    ## employment_duration in {> 7 years,4 - 7 years,unemployed}: no (8)
+    ## 
+    ## SubTree [S2]
+    ## 
+    ## savings_balance = 100 - 500 DM: yes (3)
+    ## savings_balance = 500 - 1000 DM: no (1)
+    ## savings_balance = unknown:
+    ## :...phone = no: yes (9/1)
+    ## :   phone = yes: no (3/1)
+    ## savings_balance = < 100 DM:
+    ## :...percent_of_income <= 1: no (4)
+    ##     percent_of_income > 1:
+    ##     :...phone = yes: yes (10/1)
+    ##         phone = no:
+    ##         :...purpose in {business,car0,education,renovations}: yes (3)
+    ##             purpose = car:
+    ##             :...percent_of_income <= 3: no (2)
+    ##             :   percent_of_income > 3: yes (6/1)
+    ##             purpose = furniture/appliances:
+    ##             :...years_at_residence <= 1: no (4)
+    ##                 years_at_residence > 1:
+    ##                 :...housing = other: no (1)
+    ##                     housing = rent: yes (2)
+    ##                     housing = own:
+    ##                     :...amount <= 1778: no (3)
+    ##                         amount > 1778:
+    ##                         :...years_at_residence <= 3: yes (6)
+    ##                             years_at_residence > 3: no (3/1)
+    ## 
+    ## 
+    ## Evaluation on training data (900 cases):
+    ## 
+    ##      Decision Tree   
+    ##    ----------------  
+    ##    Size      Errors  
+    ## 
+    ##      66  125(13.9%)   <<
+    ## 
+    ## 
+    ##     (a)   (b)    <-classified as
+    ##    ----  ----
+    ##     609    23    (a): class no
+    ##     102   166    (b): class yes
+    ## 
+    ## 
+    ##  Attribute usage:
+    ## 
+    ##  100.00% checking_balance
+    ##   60.22% credit_history
+    ##   53.22% months_loan_duration
+    ##   49.44% savings_balance
+    ##   30.89% job
+    ##   25.89% other_credit
+    ##   17.78% dependents
+    ##    9.67% existing_loans_count
+    ##    7.22% percent_of_income
+    ##    6.67% employment_duration
+    ##    5.78% phone
+    ##    5.56% amount
+    ##    3.78% years_at_residence
+    ##    3.44% age
+    ##    3.33% purpose
+    ##    1.67% housing
+    ## 
+    ## 
+    ## Time: 0.0 secs
+
+Las primeras líneas del `summary` se leerían así:
+
+1.  Si se desconoce el saldo de la cuenta, clasifique como **no probable
+    el incumplimiento**.
+2.  De lo contrario, si el saldo de la cuenta es menor que cero DM,
+    entre uno y 200 DM, o más de 200 DM y …
+3.  El historial de crédito es muy bueno o perfecto, y …
+4.  Hay más de un dependiente, luego clasifíquelo como **probable de
+    incumplimiento**.
+
+Los números entre paréntesis indican el **número de individuos que
+cumplen los criterios para esa decisión y el número incorrectamente
+clasificado por la decisión**. Por ejemplo, en la primera línea,
+(358/44) indica que de los 358 individuos que llegaron a la decisión, 44
+se clasificaron incorrectamente como *no*, es decir, que no es probable
+que entren en incumplimiento. En otras palabras, 44 solicitantes
+incumplieron a pesar de que la predicción del modelo dijo lo contrario.
+
+Después de la salida del árbol, el resumen (`credit_model`) muestra una
+matriz de confusión, que es una tabulación cruzada que indica los
+registros incorrectamente clasificados del modelo en los datos de
+capacitación.
+
+> Los árboles de decisión son conocidos por tener una tendencia a
+> sobreajustar el modelo a los datos de entrenamiento. Por esta razón,
+> la tasa de error informada en los datos de entrenamiento puede ser
+> demasiado optimista, y es especialmente **importante** evaluar los
+> árboles de decisión en un conjunto de datos de prueba.
+
+#### Paso 4: evaluar el rendimiento del modelo
+
+    credit_pred <- predict(credit_model, credit_test)
+
+Revisemos el ajuste
+
+    library(gmodels)
+    CrossTable(credit_test$default, credit_pred,
+    prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+    dnn = c('actual default', 'predicted default'))
+
+    ## 
+    ##  
+    ##    Cell Contents
+    ## |-------------------------|
+    ## |                       N |
+    ## |         N / Table Total |
+    ## |-------------------------|
+    ## 
+    ##  
+    ## Total Observations in Table:  100 
+    ## 
+    ##  
+    ##                | predicted default 
+    ## actual default |        no |       yes | Row Total | 
+    ## ---------------|-----------|-----------|-----------|
+    ##             no |        57 |        11 |        68 | 
+    ##                |     0.570 |     0.110 |           | 
+    ## ---------------|-----------|-----------|-----------|
+    ##            yes |        16 |        16 |        32 | 
+    ##                |     0.160 |     0.160 |           | 
+    ## ---------------|-----------|-----------|-----------|
+    ##   Column Total |        73 |        27 |       100 | 
+    ## ---------------|-----------|-----------|-----------|
+    ## 
+    ## 
+
+De los 100 registros de solicitud de préstamo de prueba, nuestro modelo
+predijo correctamente que 57 no incumplieron y 16 incumplieron, lo que
+arrojó una precisión del 73% y una tasa de error del 27%. Esto es algo
+peor que su rendimiento en los datos de entrenamiento, pero no es
+inesperado, dado que el rendimiento de un modelo es a menudo peor en
+datos no vistos.
+
+También ten en cuenta que el modelo solo predijo correctamente el 50 por
+ciento de los 32 valores predeterminados de préstamo en los datos de
+prueba (16/32). Desafortunadamente, este tipo de error es un error
+potencialmente muy costoso. Veamos si podemos mejorar el resultado con
+un poco más de esfuerzo.
+
+#### Paso 5: mejorando el ajuste (boosting)
+
+El boosting se basa en la noción de que al combinar un número de
+aprendices de rendimiento débil, puede crear un equipo que sea mucho más
+fuerte que cualquiera de los alumnos solo.
+
+Cada uno de los modelos tiene un conjunto único de fortalezas y
+debilidades, y puede ser mejor o peor en ciertos problemas. Usar una
+combinación de varios *learners* con fortalezas y debilidades
+complementarias puede por lo tanto mejorar dramáticamente la precisión
+de un clasificador.
+
+Simplemente necesitamos agregar un parámetro adicional `trials` que
+indique el **número de árboles de decisión separados** para usar en el
+equipo *boost*. El parámetro `trials` establece un límite superior; el
+algoritmo **dejará de agregar árboles si reconoce que las pruebas
+adicionales no parecen mejorar la precisión**. Comenzaremos con 10
+`trials`, un número que se ha convertido en el **estándar** de facto, ya
+que las investigaciones sugieren que esto reduce las tasas de error en
+los datos de prueba en aproximadamente un **25 por ciento**.
+
+    credit_boost10 <- C5.0(credit_train[-17], credit_train$default,
+    trials = 10)
+    credit_boost10
+
+    ## 
+    ## Call:
+    ## C5.0.default(x = credit_train[-17], y = credit_train$default, trials = 10)
+    ## 
+    ## Classification Tree
+    ## Number of samples: 900 
+    ## Number of predictors: 16 
+    ## 
+    ## Number of boosting iterations: 10 
+    ## Average tree size: 56 
+    ## 
+    ## Non-standard options: attempt to group attributes
+
+    # summary(credit_boost10)
+
+<figure>
+<img src="Figures/im4.png" alt="Matriz de confusión Boost" style="width:50.0%" /><figcaption>Matriz de confusión Boost</figcaption>
+</figure>El clasificador cometió 31 errores en 900 ejemplos de
+entrenamiento con una tasa de error del 3.4 por ciento. ¡Esto representa
+una gran mejora con respecto a la tasa de error de entrenamiento del
+13.9 por ciento que notamos antes de agregar *boost*! Sin embargo, queda
+por ver si vemos una mejora similar en los datos de prueba. Vamos a ver:
+
+    credit_boost_pred10 <- predict(credit_boost10, credit_test)
+    CrossTable(credit_test$default, credit_boost_pred10,
+    prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+    dnn = c('actual default', 'predicted default'))
+
+    ## 
+    ##  
+    ##    Cell Contents
+    ## |-------------------------|
+    ## |                       N |
+    ## |         N / Table Total |
+    ## |-------------------------|
+    ## 
+    ##  
+    ## Total Observations in Table:  100 
+    ## 
+    ##  
+    ##                | predicted default 
+    ## actual default |        no |       yes | Row Total | 
+    ## ---------------|-----------|-----------|-----------|
+    ##             no |        60 |         8 |        68 | 
+    ##                |     0.600 |     0.080 |           | 
+    ## ---------------|-----------|-----------|-----------|
+    ##            yes |        15 |        17 |        32 | 
+    ##                |     0.150 |     0.170 |           | 
+    ## ---------------|-----------|-----------|-----------|
+    ##   Column Total |        75 |        25 |       100 | 
+    ## ---------------|-----------|-----------|-----------|
+    ## 
+    ## 
+
+Aquí, redujimos la tasa de error total del 27 por ciento antes del
+*boost* al 23 por ciento en el modelo *boost* No parece una gran
+ganancia, pero está razonablemente cerca de la reducción del 25 por
+ciento que esperábamos.
+
+Por otro lado, el modelo todavía no está funcionando bien para predecir
+los valores predeterminados, obteniendo 15/32 = 47% de errores. La falta
+de una mejora aún mayor puede ser una función de nuestro conjunto de
+datos de capacitación relativamente pequeño, o puede ser un problema muy
+difícil de resolver.
+
 Referencias
 ===========
 
@@ -3313,6 +4080,9 @@ Springer.
 
 Mardia, Kanti, J. Kent, and J. Bibby. 1979. *Multivariate Analysis*.
 First. New York: Academic Press.
+
+Mingers, John. 1989. “An Empirical Comparison of Selection Measures for
+Decision-Tree Induction.” *Machine Learning* 3 (4). Springer: 319–42.
 
 Schumacker, Randall E. 2015. *Using R with Multivariate Statistics*.
 Sage Publications.
