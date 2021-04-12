@@ -1,16 +1,16 @@
--   [Procedimientos Gráficos](#procedimientos-graficos)
-    -   [Funciones Gráficas](#funciones-graficas)
+-   [Procedimientos Gráficos](#procedimientos-gráficos)
+    -   [Funciones Gráficas](#funciones-gráficas)
         -   [Funciones gráficas de alto
-            nivel](#funciones-graficas-de-alto-nivel)
+            nivel](#funciones-gráficas-de-alto-nivel)
         -   [Funciones gráficas de bajo
-            nivel](#funciones-graficas-de-bajo-nivel)
--   [Práctica](#practica)
+            nivel](#funciones-gráficas-de-bajo-nivel)
+-   [Práctica](#práctica)
 
 <!--
 La revisión metodológica aquí vertida se basa en [@Wang_2012].
 -->
-Procedimientos Gráficos
-=======================
+
+# Procedimientos Gráficos
 
 -   Una de las grandes potencialidades en R es la calidad gráfica. Su
     potencialidad es del mismo nivel e incluso superior al de muchos
@@ -24,17 +24,16 @@ Procedimientos Gráficos
 
     demo(graphics)
 
-Funciones Gráficas
-------------------
+## Funciones Gráficas
 
 -   El resultado de una función gráfica no puede ser asignado a un
     objeto sino que es enviado a un dispositivo gráfico. Un dispositivo
     gráfico es una ventana gráfica o un archivo.
 
--   Existen dos tipos de funciones gráficas:
-    -   Funciones de *gráficas de alto nivel*: Crean una nueva gráfica
-    -   Funciones de *gráficas de bajo nive*l: agregan elementos a una
-        gráfica existente
+-   Existen dos tipos de funciones gráficas: + Funciones de *gráficas de
+    alto nivel*: Crean una nueva gráfica + Funciones de *gráficas de
+    bajo nive*l: agregan elementos a una gráfica existente
+
 -   Las gráficas se producen con respecto a *parámetros gráficos* que
     están definidos por defecto y pueden ser modificados con la función
     `par`.
@@ -44,34 +43,34 @@ Funciones Gráficas
 <table>
 <thead>
 <tr class="header">
-<th align="center">Función</th>
-<th align="center">Descripción</th>
+<th style="text-align: center;">Función</th>
+<th style="text-align: center;">Descripción</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><code>plot(x)</code></td>
-<td align="center">graficar los valores de x (en el eje y) ordenados en el eje x</td>
+<td style="text-align: center;"><code>plot(x)</code></td>
+<td style="text-align: center;">graficar los valores de x (en el eje y) ordenados en el eje x</td>
 </tr>
 <tr class="even">
-<td align="center"><code>plot(x,y)</code></td>
-<td align="center">gráfico bivariado de x (en el eje x) y y (en el eje y)</td>
+<td style="text-align: center;"><code>plot(x,y)</code></td>
+<td style="text-align: center;">gráfico bivariado de x (en el eje x) y y (en el eje y)</td>
 </tr>
 <tr class="odd">
-<td align="center"><code>pie(x)</code></td>
-<td align="center">gráfico circular tipo <em>pie</em></td>
+<td style="text-align: center;"><code>pie(x)</code></td>
+<td style="text-align: center;">gráfico circular tipo <em>pie</em></td>
 </tr>
 <tr class="even">
-<td align="center"><code>boxplot(x)</code></td>
-<td align="center">Gráfico de caja y bigotes</td>
+<td style="text-align: center;"><code>boxplot(x)</code></td>
+<td style="text-align: center;">Gráfico de caja y bigotes</td>
 </tr>
 <tr class="odd">
-<td align="center"><code>hist(x)</code></td>
-<td align="center">histograma de las frecuencias de x</td>
+<td style="text-align: center;"><code>hist(x)</code></td>
+<td style="text-align: center;">histograma de las frecuencias de x</td>
 </tr>
 <tr class="even">
-<td align="center"><code>barplot(x)</code></td>
-<td align="center">histograma de los valores de x</td>
+<td style="text-align: center;"><code>barplot(x)</code></td>
+<td style="text-align: center;">histograma de los valores de x</td>
 </tr>
 </tbody>
 </table>
@@ -80,41 +79,41 @@ Funciones Gráficas
     de R.
 -   Las principales son:
 
-<table style="width:57%;">
+<table>
 <colgroup>
-<col width="5%" />
-<col width="51%" />
+<col style="width: 7%" />
+<col style="width: 92%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th align="center">Opción</th>
-<th align="center">Descripción</th>
+<th style="text-align: center;">Opción</th>
+<th style="text-align: center;">Descripción</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><code>add=FALSE</code></td>
-<td align="center">si es TRUE superpone el gráfico en el ya existente (si existe)</td>
+<td style="text-align: center;"><code>add=FALSE</code></td>
+<td style="text-align: center;">si es TRUE superpone el gráfico en el ya existente (si existe)</td>
 </tr>
 <tr class="even">
-<td align="center"><code>axes=TRUE</code></td>
-<td align="center">si es FALSE no dibuja los ejes ni la caja del gráfico</td>
+<td style="text-align: center;"><code>axes=TRUE</code></td>
+<td style="text-align: center;">si es FALSE no dibuja los ejes ni la caja del gráfico</td>
 </tr>
 <tr class="odd">
-<td align="center"><code>type=&quot;p&quot;</code></td>
-<td align="center">especifica el tipo de gráfico; <code>&quot;p&quot;</code>: puntos, <code>&quot;l&quot;</code>: líneas, <code>&quot;h&quot;</code>: líneas verticales, <code>&quot;s&quot;</code>: escaleras, los datos se representan como la parte superior de las líneas verticales, entre otros</td>
+<td style="text-align: center;"><code>type="p"</code></td>
+<td style="text-align: center;">especifica el tipo de gráfico; <code>"p"</code>: puntos, <code>"l"</code>: líneas, <code>"h"</code>: líneas verticales, <code>"s"</code>: escaleras, los datos se representan como la parte superior de las líneas verticales, entre otros</td>
 </tr>
 <tr class="even">
-<td align="center"><code>xlim=</code>, <code>ylim=</code></td>
-<td align="center">especifica los límites inferiores y superiores de los ejes; por ejemplo con <code>xlim=c(1, 10)</code> o <code>xlim=range(x)</code></td>
+<td style="text-align: center;"><code>xlim=</code>, <code>ylim=</code></td>
+<td style="text-align: center;">especifica los límites inferiores y superiores de los ejes; por ejemplo con <code>xlim=c(1, 10)</code> o <code>xlim=range(x)</code></td>
 </tr>
 <tr class="odd">
-<td align="center"><code>main=</code></td>
-<td align="center">Título principal; debe ser de tipo caracter</td>
+<td style="text-align: center;"><code>main=</code></td>
+<td style="text-align: center;">Título principal; debe ser de tipo caracter</td>
 </tr>
 <tr class="even">
-<td align="center"><code>sub=</code></td>
-<td align="center">sub-título (escrito en una letra más pequeña)</td>
+<td style="text-align: center;"><code>sub=</code></td>
+<td style="text-align: center;">sub-título (escrito en una letra más pequeña)</td>
 </tr>
 </tbody>
 </table>
@@ -124,20 +123,20 @@ Funciones Gráficas
     x <- seq(10,20,1)
     plot(x)
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+<img src="Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
 #### La función `plot(x,y)`
 
     y <- seq(30,40,1)
     plot(x,y)
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+<img src="Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
 
 #### Boxplot
 
 -   También se le llama gráfico de caja y bigotes, refleja gráficamente
     el resumen de estadísticas principales (Min,Q1,Mediana,Q3,Max,
-    Outlayers). Importa los datos `Mundo.csv` y...
+    Outlayers). Importa los datos `Mundo.csv` y…
 
 <!-- -->
 
@@ -151,7 +150,7 @@ Funciones Gráficas
 
     boxplot(datos$PNB_PC)
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 -   Mmmm, algo anda mal, la variable no se puede apreciar muy bien.
     Tratemos visualizarla haciendo una transformación logarítmica:
@@ -160,7 +159,7 @@ Funciones Gráficas
 
     boxplot(log(datos$PNB_PC))
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
 En general, si al aplicar el boxplot sobre una variable se tiene
 problemas para visualizarla, se debe usar el lograritmo de la variable
@@ -178,18 +177,18 @@ para una mejor lectura de la variable.
 
 <!-- -->
 
-    boxplot(log(PNB_PC)~REGION, col=rainbow(5))
+    boxplot(log(PNB_PC)~REGION, col=rainbow(5),data = datos)
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
 -   Agreguemos etiquetas:
 
 <!-- -->
 
-    fregion <- factor(REGION,labels=c("Africa","America","Asia","Europa","Oceania"))
-    boxplot(log(PNB_PC)~fregion, col=rainbow(5))
+    fregion <- factor(datos$REGION,labels=c("Africa","America","Asia","Europa","Oceania"))
+    boxplot(log(datos$PNB_PC)~fregion, col=rainbow(5))
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
 #### Pie
 
@@ -201,7 +200,7 @@ para una mejor lectura de la variable.
     z.pie <- c(20,40,10,30)
     pie(z.pie)
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
 -   Con etiquetas
 
@@ -210,7 +209,7 @@ para una mejor lectura de la variable.
     names(z.pie) <- c("Soltero", "Casado","Viudo",  "Divorciado")
     pie(z.pie)
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
 -   Con colores elegidos (más opciones de colores puedes encontrarlos
     [aquí](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf))
@@ -219,46 +218,43 @@ para una mejor lectura de la variable.
 
     pie(z.pie, col = c("purple", "violetred1",  "green3","cornsilk"))
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-13-1.png)
 
--   Juguemos un poco con las opciones:
-    -   Realizar un `plot` de *x* e *y* (ya creados) con las siguientes
-        opciones:
-    -   Título: Gráficas en R
-    -   Subtítulo: Centro de Estudios Fiscales
-    -   Etiquetas en ejes: `"Eje X"`, `"Eje Y"` Respectivamente
-    -   Gráfico tipo escalera
-    -   Color Azul
+-   Juguemos un poco con las opciones: + Realizar un `plot` de *x* e *y*
+    (ya creados) con las siguientes opciones: + Título: Gráficas en R +
+    Subtítulo: Centro de Estudios Fiscales + Etiquetas en ejes:
+    `"Eje X"`, `"Eje Y"` Respectivamente + Gráfico tipo escalera + Color
+    Azul
 
 ### Funciones gráficas de bajo nivel
 
-<table style="width:53%;">
+<table>
 <colgroup>
-<col width="5%" />
-<col width="47%" />
+<col style="width: 8%" />
+<col style="width: 91%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th align="center">Función</th>
-<th align="center">Descripción</th>
+<th style="text-align: center;">Función</th>
+<th style="text-align: center;">Descripción</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><code>points(x, y)</code></td>
-<td align="center">Agrega puntos</td>
+<td style="text-align: center;"><code>points(x, y)</code></td>
+<td style="text-align: center;">Agrega puntos</td>
 </tr>
 <tr class="even">
-<td align="center"><code>lines(x,y)</code></td>
-<td align="center">Mismo que points pero con líneas</td>
+<td style="text-align: center;"><code>lines(x,y)</code></td>
+<td style="text-align: center;">Mismo que points pero con líneas</td>
 </tr>
 <tr class="odd">
-<td align="center"><code>segments(x0, y0, x1, y1)</code></td>
-<td align="center">dibuja una línea desde el punto (<span class="math inline"><em>x</em><sub>0</sub></span>,<span class="math inline"><em>y</em><sub>0</sub></span>) hasta el punto (<span class="math inline"><em>x</em><sub>1</sub></span>,<span class="math inline"><em>y</em><sub>1</sub></span>)</td>
+<td style="text-align: center;"><code>segments(x0, y0, x1, y1)</code></td>
+<td style="text-align: center;">dibuja una línea desde el punto (<span class="math inline"><em>x</em><sub>0</sub></span>,<span class="math inline"><em>y</em><sub>0</sub></span>) hasta el punto (<span class="math inline"><em>x</em><sub>1</sub></span>,<span class="math inline"><em>y</em><sub>1</sub></span>)</td>
 </tr>
 <tr class="even">
-<td align="center"><code>abline(a,b)</code></td>
-<td align="center">dibuja una línea con pendiente b e intercepto a</td>
+<td style="text-align: center;"><code>abline(a,b)</code></td>
+<td style="text-align: center;">dibuja una línea con pendiente b e intercepto a</td>
 </tr>
 </tbody>
 </table>
@@ -273,7 +269,7 @@ Por ejemplo:
 
     curve(x^3-3*x,-2,2)  
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-14-1.png)
 
 **Micro práctica**
 
@@ -284,13 +280,13 @@ Por ejemplo:
     `"Valores promedio de altura y peso"`, subtitulo:
     "`Mujeres de 30 a 39 años"`. El gráfico debe lucir así:
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-15-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
 -   Haga una gráfica de la función *c**o**s*(3*x*) de 0 a 3, de color
     azul. Superponga la gráfica de *s**i**n*(2*x*) de color rojo. La
     gráfica debe lucir así:
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
 -   Cerremos esta primera parte gráfica con un ejemplo en 3D:
 
@@ -322,17 +318,18 @@ Un gráfico básico (usando lo aprendido hasta ahora)
     plot(diamonds$carat, diamonds$price, col = diamonds$color,
         pch = as.numeric(diamonds$cut))
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-18-1.png)
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-18-1.png)
 
 Usando `ggplot`:
 
     ggplot(diamonds, aes(carat, price, col = color, shape = cut)) +
         geom_point()
 
-![](%5BP1-4%5D_Procedimientos_Graficos_files/figure-markdown_strict/unnamed-chunk-19-1.png)
+    ## Warning: Using shapes for an ordinal variable is not advised
 
-Práctica
-========
+![](Procedimientos-Graficos_files/figure-markdown_strict/unnamed-chunk-19-1.png)
+
+# Práctica
 
 -   Abra los datos de R `cars`. Es una buena práctica el conocer los
     nuestros datos. Mira la ayuda de `cars`.
@@ -341,9 +338,10 @@ Práctica
     podemos usar funciones como: `dim()`, `names()`, `head()`, `tail()`
     y `summary()`.
 
--   Hagamos un gráfico básico `plot(cars)`
-    -   `R` nota que el data frame tiene sólo dos columnas, por lo que
-        asume que deseas graficar una columna vs la otra.
+-   Hagamos un gráfico básico `plot(cars)` + `R` nota que el data frame
+    tiene sólo dos columnas, por lo que asume que deseas graficar una
+    columna vs la otra.
+
 -   Además, ya que no se proporcionan etiquetas para los ejes, `R`
     utiliza los nombres de las columnas.
 

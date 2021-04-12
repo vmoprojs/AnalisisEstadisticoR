@@ -12,7 +12,7 @@
     -   [While](#while)
     -   [If - Else](#if---else)
 -   [Funciones](#funciones)
-    -   [Oasis: Algo de cálculo](#oasis-algo-de-calculo)
+    -   [Oasis: Algo de cálculo](#oasis-algo-de-cálculo)
     -   [VAN](#van)
 -   [La Familia Apply](#la-familia-apply)
     -   [lapply](#lapply)
@@ -20,12 +20,12 @@
     -   [apply](#apply)
     -   [tapply](#tapply)
         -   [Ejercicio](#ejercicio)
--   [Administración de datos](#administracion-de-datos)
+-   [Administración de datos](#administración-de-datos)
     -   [Ordenar datos](#ordenar-datos)
     -   [Unir datos](#unir-datos)
         -   [Ejemplo 1](#ejemplo-1)
         -   [Ejemplo 2 (una tabla no tiene un
-            país)](#ejemplo-2-una-tabla-no-tiene-un-pais)
+            país)](#ejemplo-2-una-tabla-no-tiene-un-país)
         -   [Ejemplo 3 (muchos a uno)](#ejemplo-3-muchos-a-uno)
         -   [Ejemplo 4 (ids comunes con nombres
             diferentes)](#ejemplo-4-ids-comunes-con-nombres-diferentes)
@@ -41,15 +41,18 @@
 <!--
 La revisión metodológica aquí vertida se basa en [@Wang_2012].
 -->
-Objetos
-=======
+<!-- ```{r setup, include=FALSE} -->
+<!-- knitr::opts_chunk$set(echo = TRUE,message = FALSE,warning = FALSE) -->
+<!-- knitr::opts_knit$set(root.dir = normalizePath("/Users/victormoralesonate/Documents/Consultorias&Cursos/DataLectures"))  -->
+<!-- ``` -->
+
+# Objetos
 
 Ya hemos visto la definición de un objeto, además de nuestro primer
 objeto: un vector. Ahora veremos cuatro de los objetos más usados en los
 primetos pasos en R: factores, listas, matrices y data.frames.
 
-Factor
-------
+## Factor
 
 -   Un tipo de vector para datos categóricos
 
@@ -83,12 +86,11 @@ observaciones:
     ## m f 
     ## 3 0
 
-Listas
-------
+## Listas
 
 Es *vector generalizado*. Cada lista está formada por componentes (que
 pueden ser otras listas), y cada componente puede ser de un tipo
-distinto. Son unos "contenedores generales”.
+distinto. Son unos “contenedores generales.”
 
     n <- c(2, 3, 5) 
     s <- c("aa", "bb", "cc", "dd", "ee") 
@@ -163,11 +165,10 @@ matemáticas no definidas.
 
     ## [1] FALSE FALSE  TRUE FALSE FALSE
 
-Matrices y Dataframes
----------------------
+## Matrices y Dataframes
 
 En esta clase, vamos a cubrir las *matrices* y *data frames*. Ambos
-representan los tipos de datos "rectangulares", lo que significa que se
+representan los tipos de datos “rectangulares,” lo que significa que se
 utilizan para almacenar datos tabulares, con filas y columnas.
 
 La principal diferencia, como se verán, es que las matrices sólo pueden
@@ -189,6 +190,7 @@ de los vectores, este tiene el atributo `dim`, veamos:
     atributo. Escribe `dim(my_vector) <- c(4, 5)`
 
 -   Ahora, mira cuál es la dimensión de `my_vector`
+
     -   Al igual que en la clase de matemáticas, cuando se trata de un
         objeto de 2 dimensiones (piense mesa rectangular), el primer
         número es el número de filas y el segundo es el número de
@@ -197,6 +199,7 @@ de los vectores, este tiene el atributo `dim`, veamos:
     -   ¡Pero espera! Eso no suena como un vector más. Bueno, no lo es.
         Ahora es una matriz. Ver el contenido de `my_vector` ahora para
         ver lo que parece. Imprime el contenido de `my_vector`
+
 -   Ves, ahora tenemos una matriz, confirmemos esto usando a función
     `class()`, así: `class(my_vector)`.
 
@@ -223,7 +226,7 @@ El código del ejemplo anterior sería:
 
     class(my_vector)
 
-    ## [1] "matrix"
+    ## [1] "matrix" "array"
 
     my_matrix <- my_vector
 
@@ -380,8 +383,7 @@ Cuya solución en `R` sería:
 
     ## [1] -4  6  1
 
-Arrays
-------
+## Arrays
 
 -   Generalización multidimensional de vector. Elementos del mismo tipo.
 
@@ -389,8 +391,7 @@ Arrays
 
     x <- array(1:20, dim=c(4,5))
 
-Bucles
-======
+# Bucles
 
 -   Una ventaja de R comparado con otros programas estadísticos con
     “menus y botones” es la posibilidad de programar de una manera muy
@@ -414,8 +415,7 @@ Bucles
     z <- 0
     for (i in 1:50000) z[i] <- x[i]^2 
 
-FOR
----
+## FOR
 
 La sintaxis de la intrucción es:
 
@@ -462,8 +462,7 @@ Ejemplos
     ## [1] "metro"
     ## [1] "moto"
 
-While
------
+## While
 
 -   Ejemplo 1:
 
@@ -488,8 +487,7 @@ While
 
     ## [1] 13
 
-If - Else
----------
+## If - Else
 
 -   Empecemos con un ejemplo simple:
 
@@ -503,8 +501,7 @@ If - Else
       y <- 4
     }
 
-Funciones
-=========
+# Funciones
 
 Las funciones son declaradas con `function(x,y,...)` seguido de llaves
 `{}`. Los valores dentro de la función son los parámetros o valores de
@@ -539,7 +536,7 @@ dichos parámetros.
 
 ### Oasis: Algo de cálculo
 
--   Derivada de *f*(*x*)=*e*<sup>2*x*</sup>
+-   Derivada de *f*(*x*) = *e*<sup>2*x*</sup>
 
 <!-- -->
 
@@ -570,22 +567,18 @@ Su expresión es $VAN = \\sum\_{i=0}^{n}\\frac{Vi}{(1+K)^i} - I\_{0}$
       sum(y) - I0
       }
 
-La Familia Apply
-================
+# La Familia Apply
 
 -   Existen algunas funciones que nos facilitan la vida en lugar de usar
     *loops*:
 
-    -   lapply: Itera sobre una lista y evalúa una función en cada
-        elemento.
-    -   sapply: Lo mismo que laaply pero trata de simplifica el
-        resultado.
-    -   apply: Aplica una función sobre las dimensiones de un array.
-    -   tapply: Aplica una función sobre subconjuntos de un vector
-    -   mapply: Versión multivariada de lapply
+        + lapply: Itera sobre una lista y evalúa una función en cada elemento.
+        + sapply: Lo mismo que laaply pero trata de simplifica el resultado.
+        + apply: Aplica una función sobre las dimensiones de un array.
+        + tapply: Aplica una función sobre subconjuntos de un vector
+        + mapply: Versión multivariada de lapply
 
-lapply
-------
+## lapply
 
 -   *lapply* siempre retorna una lista, independientemente de la clase
     del objeto de entrada
@@ -599,7 +592,7 @@ lapply
     ## [1] 3
     ## 
     ## $b
-    ## [1] 0.5369449
+    ## [1] 0.7295863
 
     x <- list(a = 1:4, b = rnorm(10), 
     c = rnorm(20, 1), d = rnorm(100, 5))
@@ -609,39 +602,40 @@ lapply
     ## [1] 2.5
     ## 
     ## $b
-    ## [1] -0.003889557
+    ## [1] -0.07839567
     ## 
     ## $c
-    ## [1] 1.05571
+    ## [1] 0.7521391
     ## 
     ## $d
-    ## [1] 5.07761
+    ## [1] 5.106946
 
     x <- 1:4
     lapply(x, runif)
 
     ## [[1]]
-    ## [1] 0.8229832
+    ## [1] 0.2475945
     ## 
     ## [[2]]
-    ## [1] 0.4841696 0.8205580
+    ## [1] 0.8648215 0.1323906
     ## 
     ## [[3]]
-    ## [1] 0.97944165 0.06604890 0.03877746
+    ## [1] 0.5007987 0.4737194 0.8243725
     ## 
     ## [[4]]
-    ## [1] 0.7081068 0.2132236 0.2856622 0.1913702
+    ## [1] 0.8105964 0.4629327 0.6304612 0.8767512
 
-sapply
-------
+## sapply
 
 -   *sapply* tratará de simplificar el resultado de lapply de ser
     posible
 
 -   Si el resultado es una lista donde cada elemento es de longitud 1,
     entonces retorna un vector
+
 -   Si el resultado es una lista donde cada elemento es un vector de la
     misma longitud (&gt;1), retorna una matriz.
+
 -   Si lo puede descifrar las cosas, retorna una lista
 
 <!-- -->
@@ -653,25 +647,26 @@ sapply
     ## [1] 2.5
     ## 
     ## $b
-    ## [1] -0.4336928
+    ## [1] -0.1590589
     ## 
     ## $c
-    ## [1] 0.8372504
+    ## [1] 1.025539
     ## 
     ## $d
-    ## [1] 4.92814
+    ## [1] 4.789736
 
     sapply(x, mean)
 
     ##          a          b          c          d 
-    ##  2.5000000 -0.4336928  0.8372504  4.9281404
+    ##  2.5000000 -0.1590589  1.0255391  4.7897355
 
     mean(x)
 
+    ## Warning in mean.default(x): argument is not numeric or logical: returning NA
+
     ## [1] NA
 
-apply
------
+## apply
 
 -   *apply* se use para evaluar una función sobre las dimensiones de un
     array
@@ -685,28 +680,27 @@ apply
     x <- matrix(rnorm(200), 20, 10)
     apply(x, 2, mean)
 
-    ##  [1] -0.20018240 -0.04725967 -0.07591286 -0.25954927 -0.08652265
-    ##  [6] -0.01940830 -0.28272047 -0.25974591  0.03146958 -0.09085948
+    ##  [1]  0.16220332 -0.02595027  0.17952638  0.48662446  0.02496155 -0.09513870
+    ##  [7] -0.22211288 -0.48227181  0.02647591 -0.30440031
 
     apply(x, 1, sum)
 
-    ##  [1]  2.804729111 -5.357580053 -3.675089036 -0.172368096 -0.996160910
-    ##  [6] -0.568648271  4.834871187 -1.307373412 -0.632001557 -3.631212593
-    ## [11] -2.012343911 -6.015420862 -0.001453551  0.299770230 -2.707041006
-    ## [16] -4.648374775 -1.226956918  3.197350928 -1.658486699 -2.340038358
+    ##  [1] -1.34238575 -2.59901953  5.96686129 -1.68581802  1.81498158 -1.09877167
+    ##  [7] -1.56864469 -2.79453817 -1.35907823  0.61487643  0.05843703  0.33528421
+    ## [13] -2.08181085 -1.14370597  1.26604819  1.16362615 -6.84907637 -0.25093695
+    ## [19]  4.94078919  1.61123505
 
 -   Para sumas y medias de matrices tenemos algunos :
 
-    -   `rowSums = apply(x, 1, sum)`
-    -   `rowMeans = apply(x, 1, mean)`
-    -   `colSums = apply(x, 2, sum)`
-    -   `colMeans = apply(x, 2, mean)`
+        + `rowSums = apply(x, 1, sum)`
+        + `rowMeans = apply(x, 1, mean)`
+        + `colSums = apply(x, 2, sum)`
+        + `colMeans = apply(x, 2, mean)`
 
 -   Las funciones cortas son más rápidas, pero no se nota menos que se
     use matrices grades.
 
-tapply
-------
+## tapply
 
 -   *tapply* Se usa para aplicar funciones sobre subconjuntos de un
     vector.
@@ -725,7 +719,7 @@ tapply
     tapply(x, f, mean)
 
     ##          1          2          3 
-    ## -0.1033099  0.5077103  0.7430249
+    ## 0.03697156 0.47777047 1.55344734
 
 -   Para encontrar rangos por grupo:
 
@@ -734,13 +728,13 @@ tapply
     tapply(x, f, range)
 
     ## $`1`
-    ## [1] -2.030733  1.344377
+    ## [1] -0.9350928  1.2153144
     ## 
     ## $`2`
-    ## [1] 0.05176518 0.97364499
+    ## [1] 0.1412818 0.8150896
     ## 
     ## $`3`
-    ## [1] -0.6283389  2.0198314
+    ## [1] 0.5348471 3.4507914
 
 ### Ejercicio
 
@@ -769,11 +763,9 @@ tiene el mismo signo que `x[i + 1] -x [i]`.
 
     ## [1] 0.4
 
-Administración de datos
-=======================
+# Administración de datos
 
-Ordenar datos
--------------
+## Ordenar datos
 
 Para ordenar un marco de datos en R, use la función `order()`. Por
 defecto, la clasificación es **ascendente**. Anteponga la variable de
@@ -892,8 +884,7 @@ Veamos unos ejemplos:
     ## Fiat 128       32.4   4
     ## Toyota Corolla 33.9   4
 
-Unir datos
-----------
+## Unir datos
 
 Para unir dos tablas de datos (datasets) horizontalmente, use la función
 `merge`. En la mayoría de los casos, se une dos tablas de datos por una
@@ -972,8 +963,7 @@ o `.y` para identificar la data de la que provienen.
     ## 11       C 2002   356     0  1.26 -1.26  0.37 -1.26  0.37  6
     ## 12       C 2003  1225     1  1.42 -1.31 -0.38 -1.31 -0.38  7
 
-Append
-------
+## Append
 
 ![](Figuras/m6.png)
 
@@ -991,8 +981,7 @@ Append
     ## 11       C 2002   356     0  1.26 -1.26  0.37
     ## 12       C 2003  1225     1  1.42 -1.31 -0.38
 
-Aggregate y By
---------------
+## Aggregate y By
 
 ### By
 
@@ -1005,58 +994,58 @@ Aggregate y By
     by(InsectSprays,InsectSprays$spray,summary)
 
     ## InsectSprays$spray: A
-    ##      count       spray        x           
-    ##  Min.   : 7.00   A:12   Min.   :-1.53947  
-    ##  1st Qu.:11.50   B: 0   1st Qu.:-0.11223  
-    ##  Median :14.00   C: 0   Median : 0.11576  
-    ##  Mean   :14.50   D: 0   Mean   :-0.04584  
-    ##  3rd Qu.:17.75   E: 0   3rd Qu.: 0.32242  
-    ##  Max.   :23.00   F: 0   Max.   : 0.69653  
-    ## -------------------------------------------------------- 
+    ##      count       spray        x            
+    ##  Min.   : 7.00   A:12   Min.   :-1.359781  
+    ##  1st Qu.:11.50   B: 0   1st Qu.:-0.711269  
+    ##  Median :14.00   C: 0   Median : 0.002009  
+    ##  Mean   :14.50   D: 0   Mean   : 0.212352  
+    ##  3rd Qu.:17.75   E: 0   3rd Qu.: 1.186828  
+    ##  Max.   :23.00   F: 0   Max.   : 2.061215  
+    ## ------------------------------------------------------------ 
     ## InsectSprays$spray: B
-    ##      count       spray        x          
-    ##  Min.   : 7.00   A: 0   Min.   :-1.1217  
-    ##  1st Qu.:12.50   B:12   1st Qu.: 0.1227  
-    ##  Median :16.50   C: 0   Median : 0.3584  
-    ##  Mean   :15.33   D: 0   Mean   : 0.4842  
-    ##  3rd Qu.:17.50   E: 0   3rd Qu.: 1.1796  
-    ##  Max.   :21.00   F: 0   Max.   : 1.4234  
-    ## -------------------------------------------------------- 
-    ## InsectSprays$spray: C
     ##      count       spray        x           
-    ##  Min.   :0.000   A: 0   Min.   :-1.83605  
-    ##  1st Qu.:1.000   B: 0   1st Qu.:-0.47084  
-    ##  Median :1.500   C:12   Median :-0.01550  
-    ##  Mean   :2.083   D: 0   Mean   :-0.09979  
-    ##  3rd Qu.:3.000   E: 0   3rd Qu.: 0.37242  
-    ##  Max.   :7.000   F: 0   Max.   : 1.45464  
-    ## -------------------------------------------------------- 
+    ##  Min.   : 7.00   A: 0   Min.   :-2.37589  
+    ##  1st Qu.:12.50   B:12   1st Qu.:-0.96211  
+    ##  Median :16.50   C: 0   Median : 0.07474  
+    ##  Mean   :15.33   D: 0   Mean   :-0.33677  
+    ##  3rd Qu.:17.50   E: 0   3rd Qu.: 0.29852  
+    ##  Max.   :21.00   F: 0   Max.   : 1.20906  
+    ## ------------------------------------------------------------ 
+    ## InsectSprays$spray: C
+    ##      count       spray        x          
+    ##  Min.   :0.000   A: 0   Min.   :-1.6009  
+    ##  1st Qu.:1.000   B: 0   1st Qu.:-1.2215  
+    ##  Median :1.500   C:12   Median :-0.9797  
+    ##  Mean   :2.083   D: 0   Mean   :-0.5802  
+    ##  3rd Qu.:3.000   E: 0   3rd Qu.:-0.3070  
+    ##  Max.   :7.000   F: 0   Max.   : 1.3836  
+    ## ------------------------------------------------------------ 
     ## InsectSprays$spray: D
     ##      count        spray        x           
-    ##  Min.   : 2.000   A: 0   Min.   :-1.55438  
-    ##  1st Qu.: 3.750   B: 0   1st Qu.:-0.58804  
-    ##  Median : 5.000   C: 0   Median :-0.05623  
-    ##  Mean   : 4.917   D:12   Mean   :-0.15251  
-    ##  3rd Qu.: 5.000   E: 0   3rd Qu.: 0.27766  
-    ##  Max.   :12.000   F: 0   Max.   : 0.80747  
-    ## -------------------------------------------------------- 
+    ##  Min.   : 2.000   A: 0   Min.   :-1.87914  
+    ##  1st Qu.: 3.750   B: 0   1st Qu.:-0.28767  
+    ##  Median : 5.000   C: 0   Median :-0.00975  
+    ##  Mean   : 4.917   D:12   Mean   : 0.02370  
+    ##  3rd Qu.: 5.000   E: 0   3rd Qu.: 0.67521  
+    ##  Max.   :12.000   F: 0   Max.   : 1.21413  
+    ## ------------------------------------------------------------ 
     ## InsectSprays$spray: E
-    ##      count      spray        x          
-    ##  Min.   :1.00   A: 0   Min.   :-3.0052  
-    ##  1st Qu.:2.75   B: 0   1st Qu.:-1.2742  
-    ##  Median :3.00   C: 0   Median :-0.9546  
-    ##  Mean   :3.50   D: 0   Mean   :-0.5639  
-    ##  3rd Qu.:5.00   E:12   3rd Qu.: 0.5129  
-    ##  Max.   :6.00   F: 0   Max.   : 1.4212  
-    ## -------------------------------------------------------- 
+    ##      count      spray        x           
+    ##  Min.   :1.00   A: 0   Min.   :-0.95909  
+    ##  1st Qu.:2.75   B: 0   1st Qu.:-0.30493  
+    ##  Median :3.00   C: 0   Median :-0.05528  
+    ##  Mean   :3.50   D: 0   Mean   : 0.23552  
+    ##  3rd Qu.:5.00   E:12   3rd Qu.: 0.59548  
+    ##  Max.   :6.00   F: 0   Max.   : 2.42487  
+    ## ------------------------------------------------------------ 
     ## InsectSprays$spray: F
-    ##      count       spray        x          
-    ##  Min.   : 9.00   A: 0   Min.   :-2.1934  
-    ##  1st Qu.:12.50   B: 0   1st Qu.:-1.2005  
-    ##  Median :15.00   C: 0   Median :-0.2205  
-    ##  Mean   :16.67   D: 0   Mean   :-0.3406  
-    ##  3rd Qu.:22.50   E: 0   3rd Qu.: 0.3394  
-    ##  Max.   :26.00   F:12   Max.   : 1.3933
+    ##      count       spray        x            
+    ##  Min.   : 9.00   A: 0   Min.   :-1.242478  
+    ##  1st Qu.:12.50   B: 0   1st Qu.:-0.431556  
+    ##  Median :15.00   C: 0   Median : 0.001259  
+    ##  Mean   :16.67   D: 0   Mean   : 0.063066  
+    ##  3rd Qu.:22.50   E: 0   3rd Qu.: 0.454438  
+    ##  Max.   :26.00   F:12   Max.   : 2.094027
 
 ### Aggregate
 
@@ -1069,25 +1058,24 @@ Es relativamente fácil colapsar datos en R usando una o más variables
       FUN=mean, na.rm=TRUE,data = mtcars)
     print(aggdata)
 
-    ##   Group.1 Group.2      mpg cyl   disp       hp     drat       wt     qsec
-    ## 1       4       0 26.00000   4 120.30  91.0000 4.430000 2.140000 16.70000
-    ## 2       6       0 20.56667   6 155.00 131.6667 3.806667 2.755000 16.32667
-    ## 3       8       0 15.10000   8 353.10 209.2143 3.229286 3.999214 16.77214
-    ## 4       4       1 26.73000   4 103.62  81.8000 4.035000 2.300300 19.38100
-    ## 5       6       1 19.12500   6 204.55 115.2500 3.420000 3.388750 19.21500
-    ##   vs        am     gear     carb
-    ## 1  0 1.0000000 5.000000 2.000000
-    ## 2  0 1.0000000 4.333333 4.666667
-    ## 3  0 0.1428571 3.285714 3.500000
-    ## 4  1 0.7000000 4.000000 1.500000
-    ## 5  1 0.0000000 3.500000 2.500000
+    ##   Group.1 Group.2      mpg cyl   disp       hp     drat       wt     qsec vs
+    ## 1       4       0 26.00000   4 120.30  91.0000 4.430000 2.140000 16.70000  0
+    ## 2       6       0 20.56667   6 155.00 131.6667 3.806667 2.755000 16.32667  0
+    ## 3       8       0 15.10000   8 353.10 209.2143 3.229286 3.999214 16.77214  0
+    ## 4       4       1 26.73000   4 103.62  81.8000 4.035000 2.300300 19.38100  1
+    ## 5       6       1 19.12500   6 204.55 115.2500 3.420000 3.388750 19.21500  1
+    ##          am     gear     carb
+    ## 1 1.0000000 5.000000 2.000000
+    ## 2 1.0000000 4.333333 4.666667
+    ## 3 0.1428571 3.285714 3.500000
+    ## 4 0.7000000 4.000000 1.500000
+    ## 5 0.0000000 3.500000 2.500000
 
 Al usar la función `aggregate()`, las variables by deben estar en una
 lista (incluso si solo hay una). La función puede ser incorporada o
 proporcionada por el usuario.
 
-Reshape
--------
+## Reshape
 
 Use la función `t()` para transponer una matriz o una tabla de datos. En
 el caso de `data.frames`, los nombres de fila se convierten en nombres
@@ -1256,6 +1244,7 @@ muy simple.
 <!--                  # direction to reshape -->
 <!--                  direction="long" -->
 <!--                        ) -->
+
 Ejemplo:
 
     library(reshape)

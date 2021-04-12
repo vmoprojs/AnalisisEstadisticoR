@@ -1,17 +1,20 @@
--   [Simulación](#simulacion)
+-   [Simulación](#simulación)
+-   [Referencias](#referencias)
 
 <!--
 La revisión metodológica aquí vertida se basa en [@Wang_2012].
 -->
-Simulación
-==========
+
+Tomado de Kross et al. (2020)
+
+# Simulación
 
 Una de las grandes ventajas de utilizar un lenguaje de programación
 estadística como R es su vasta colección de herramientas para la
 simulación de números aleatorios.
 
 Esta sesión asume la familiaridad con algunas distribuciones de
-probabilidad comunes, pero estos temas sólo se discuten con respecto a
+probabilidad comunes, pero estos temas solo se discuten con respecto a
 la generación de números aleatorios. Incluso si no tienes experiencia
 previa con estos conceptos, deberías ser capaz de completar la sesión y
 entender las ideas principales.
@@ -26,19 +29,12 @@ entender las ideas principales.
     probabilidad de obtener el mismo resultado exacto es
     $(\\frac{1}{6})^4$ = 0.00077, que es bastante pequeña!)
 
-    -   `sample(1:6, 4, replace = TRUE)` da instrucciones a R para
-        seleccionar cuatro número al azar entre 1 y 6, con el reemplazo.
-        El muestreo con reemplazo simplemente significa que cada número
-        es *reemplazado* después de que se ha seleccionado, por lo que
-        el mismo número puede aparecer más de una vez. Esto es lo que
-        queremos aquí, ya que lo sacas en un dado no debe afectar lo
-        sacas en cualquiera de los otros.
+        + `sample(1:6, 4, replace = TRUE)` da instrucciones a R para seleccionar cuatro número al azar entre 1 y 6, con el reemplazo. El muestreo con reemplazo simplemente significa que cada número es *reemplazado* después de que se ha seleccionado, por lo que el mismo número puede aparecer más de una vez. Esto es lo que queremos aquí, ya que lo sacas en un dado no debe afectar lo sacas en cualquiera de los otros.
 
 -   Ahora, obtén una muestra de 10 números entre 1 y 20, SIN REEMPLAZO.
     Para hacerlo, simplementre elimina el argumento `replace`.
 
-    -   Dado el último comando muestrea sin reemplazo, ningún número
-        aparece más de una vez en la salida.
+        + Dado el último comando muestrea sin reemplazo, ningún número aparece más de una vez en la salida.
 
 -   `LETTERS` es una variable predefinida en `R` que contiene un vector
     de las 26 letras del alfabeto en Inglés. Imprímela.
@@ -47,10 +43,7 @@ entender las ideas principales.
     reorganizar, los elementos de un vector. Por ejemplo, ejecuta
     `sample(LETTERS)` para permutar las 26 letras del alfabeto.
 
-    -   Esto es idéntico a tomar una muestra de tamaño 26 de `LETTERS`,
-        sin reemplazo. Cuando no se especifica el argumento `'size'` de
-        `sample()`, `R` toma una muestra del mismo tamaño que el vector
-        desde el que se está muestreando.
+        + Esto es idéntico a tomar una muestra de tamaño 26 de `LETTERS`, sin reemplazo. Cuando no se especifica el argumento `'size'` de `sample()`, `R` toma una muestra del mismo tamaño que el vector desde el que se está muestreando.
 
 Hasta el momento, el código sería:
 
@@ -95,7 +88,7 @@ Cada distribución de probabilidad en R tiene una función`r***` (`r` de
 interesados en las funciones `r***`, pero exploren los demás por su
 cuenta.
 
--   Una variable aleatoria binomial representa el número de "éxitos"
+-   Una variable aleatoria binomial representa el número de “éxitos”
     (cara) en un número determinado de *ensayos* independientes
     (lanzamientos). Por lo tanto, podemos generar una sola variable
     aleatoria que representa el número de cabezas en 100 lanzamientos de
@@ -153,8 +146,7 @@ y compacta.
 
 -   Miremos la distribución de las medias por columna con un histograma.
 
-    -   Parece que nuestros valores se distribuyen casi normalmente,
-        ¿verdad? Ese es el teorema del límite central trabajando.
+        + Parece que nuestros valores se distribuyen casi normalmente, ¿verdad? Ese es el teorema del límite central trabajando.
 
 -   Todas las distribuciones de probabilidad estándar están incorporados
     en R, incluyendo exponencial (`rexp()`), Chi-cuadrado (`rchisq()`),
@@ -163,3 +155,8 @@ y compacta.
 La simulación es prácticamente un campo propio y sólo hemos rozado la
 superficie de lo que es posible. Los animo a explorar estas y otras
 funciones más por su cuenta.
+
+# Referencias
+
+Kross, Sean, Nick Carchedi, Bill Bauer, and Gina Grdina. 2020. *Swirl:
+Learn r, in r*. <https://CRAN.R-project.org/package=swirl>.

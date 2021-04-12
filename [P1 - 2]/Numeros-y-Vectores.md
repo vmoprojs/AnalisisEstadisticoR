@@ -1,17 +1,20 @@
 -   [Manipulaciones simples: números y
-    vectores](#manipulaciones-simples-numeros-y-vectores)
+    vectores](#manipulaciones-simples-números-y-vectores)
     -   [Objetos](#objetos)
-    -   [Álgebra de Vectores](#algebra-de-vectores)
-    -   [Propiedades de indexación](#propiedades-de-indexacion)
+    -   [Álgebra de Vectores](#álgebra-de-vectores)
+    -   [Propiedades de indexación](#propiedades-de-indexación)
 
 <!--
 La revisión metodológica aquí vertida se basa en [@Wang_2012].
 -->
-Manipulaciones simples: números y vectores
-==========================================
+<!-- ```{r setup, include=FALSE} -->
+<!-- knitr::opts_chunk$set(echo = TRUE) -->
+<!-- knitr::opts_knit$set(root.dir = normalizePath("/Users/victormoralesonate/Documents/Consultorias&Cursos/DataLectures"))  -->
+<!-- ``` -->
 
-Objetos
--------
+# Manipulaciones simples: números y vectores
+
+## Objetos
 
 -   Los objetos son entidades que tienen un determinado estado,
     comportamiento (método) e identidad.
@@ -51,7 +54,7 @@ R tiene 5 clases de básicos de vectores
 Los objetos en R pueden tener atributos
 
 -   names, dimnames
--   dimensions (e.g. matrices, arrays)
+-   dimensions (e.g. matrices, arrays)
 -   class
 -   length
 -   Otros user-defined attributes/metadata
@@ -110,8 +113,7 @@ Se puede cambiar la clase de los objetos usando funciones del tipo
 
     ## [1] 0+0i 1+0i 2+0i 3+0i 4+0i 5+0i 6+0i
 
-Álgebra de Vectores
--------------------
+## Álgebra de Vectores
 
 -   Un *vector columna* es una lista de números agrupados uno sobre el
     otro:
@@ -155,7 +157,7 @@ a = \\begin{bmatrix}
 \\end{bmatrix}
 $$
 
-<img src="[P1-2]_Numeros_y_Vectores_files/figure-markdown_strict/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="Numeros-y-Vectores_files/figure-markdown_strict/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 
 -   Los vectores en R se imprimen en *fila*, pero se puden ser vistos
     como fila.
@@ -170,7 +172,7 @@ $$
 ### Transponer vectores
 
 Transponer significa *convertir* una fila en columna (o al revés). Se
-denota como: **<sup>*T*</sup>.
+denota como: <sup>*T*</sup>.
 
 $$
 \\begin{bmatrix}
@@ -259,8 +261,7 @@ producto interno es cero:
 
 *v*<sub>1</sub> ⊥ *v*<sub>2</sub> ⇔ *v*<sub>1</sub>.*v*<sub>2</sub> = 0
 
-Propiedades de indexación
--------------------------
+## Propiedades de indexación
 
 ### Indexación
 
@@ -307,7 +308,7 @@ Otro ejemplo:
 
     ## [1]  5 12
 
-### El operador ":"
+### El operador “:”
 
     i <- 2
     (1:i)-1 # Esto significa (1:i) NO 1:(i-1)

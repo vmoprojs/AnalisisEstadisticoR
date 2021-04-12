@@ -1,22 +1,23 @@
--   [Introducción y Preliminares](#introduccion-y-preliminares)
--   [Importando datos en R](#importando-datos-en-r)
+-   [Introducción y Preliminares](#introducción-y-preliminares)
 
 <!--
 La revisión metodológica aquí vertida se basa en [@Wang_2012].
 -->
-Introducción y Preliminares
-===========================
+<!-- ```{r setup, include=FALSE} -->
+<!-- # knitr::opts_chunk$set(echo = TRUE) -->
+<!-- # knitr::opts_knit$set(root.dir = normalizePath("/Users/victormoralesonate/Documents/Consultorias&Cursos/DataLectures")) -->
+<!-- ``` -->
 
-¿Qué es R?
-----------
+# Introducción y Preliminares
+
+## ¿Qué es R?
 
 -   R es un ambiente y lenguaje para estadística computacional y
     gráficos.
 -   R es un dialecto del lenguaje S, es un proyecto
     [GNU](http://www.gnu.org/).
 
-¿Qué es S?
-----------
+## ¿Qué es S?
 
 -   S es un lenguaje que fue desarrollado por John Chambers y sus
     colegas en laboratorios Bell.
@@ -36,8 +37,7 @@ Introducción y Preliminares
     Data](http://www.springer.com/us/book/9780387985039) de *John
     Chambers* documenta esta versión del lenguaje.
 
-Notas Históricas
-----------------
+\#\#Notas Históricas
 
 -   En 1993, Laboratorios Bell le dio a *StatSci* (ahora corporación
     *Insightful*) una licencia exclusiva para desarrollar y vender el
@@ -47,8 +47,7 @@ Notas Históricas
 -   En el 2006, Alcatel compró Lucent y se llama Alcatel-Lucent
 -   Los fundamentos del lenguaje S no han cambiado desde 1998.
 
-De regreso a R
---------------
+## De regreso a R
 
 -   1991: Creado en Nueva Zelanda por Ross Ihaka y Robert Gentleman.
 -   1993: Primer anuncio de R al público
@@ -59,8 +58,7 @@ De regreso a R
 -   2000: La versión 1.0.0 se libera.
 -   2015: Se libera la versión 3.2.2.
 
-Caraterísticas
---------------
+## Caraterísticas
 
 -   R es gratis y de código libre.
 -   Disponible para Windows, Mac y Linux.
@@ -69,8 +67,7 @@ Caraterísticas
 -   La comunidad de R es muy dinámica (ej., crecimiento en número de
     paquetes), integrada por estadísticos de gran renombre.
 
-Sofware Libre (libertades)
---------------------------
+## Sofware Libre (libertades)
 
 1.  Libertad de correr el programa para cualquier propósito.
 2.  Libertad de estudiar cómo funciona el programa, adaptarlo a tus
@@ -79,8 +76,7 @@ Sofware Libre (libertades)
 4.  Libertad de mejorar el programa y liberar tus mejoras al público de
     tal manera que se beneficie toda la comunidad.
 
-Algunos recursos
-----------------
+## Algunos recursos
 
 Disponibles en el CRAN (<https://cran.r-project.org/>)
 
@@ -90,8 +86,7 @@ Disponibles en el CRAN (<https://cran.r-project.org/>)
 -   Writing R Extensions
 -   R Internals
 
-En línea
---------
+## En línea
 
 -   En Google +: [R en
     Español](https://plus.google.com/u/0/communities/113701715197444918479).
@@ -102,8 +97,7 @@ En línea
     M1](https://www.youtube.com/watch?v=fOpr4-7m_ds), [Introducción al
     R - M2](https://www.youtube.com/watch?v=njqjlRrOHGY)
 
-Libros
-------
+\#\#Libros
 
 -   Matloff (2011). *The art of R programming*, William Pollock.
 -   Albert (2012). *R by example*, Springer.
@@ -111,16 +105,14 @@ Libros
 En general, la colección de libros [USE
 R!](http://www.r-project.org/doc/bib/R-books.html) son excelentes.
 
-¿Cómo funciona?
----------------
+\#\#¿Cómo funciona?
 
 Tomado de [R para
 Principiantes](https://cran.r-project.org/doc/contrib/rdebuts_es.pdf)
 
 ![im2](Figuras/im2.jpg)
 
-Entorno
--------
+\#\#Entorno
 
 Abre el R Studio
 
@@ -136,8 +128,7 @@ Abre el R Studio
 -   Ventana auxiliar (panel inferior derecho): ayuda, gráficos,
     paquetes.
 
-R como una calculadora
-----------------------
+## R como una calculadora
 
 R se puede usar como una calculadora. Digite los siguientes comandos en
 la consola (seguido del *enter*):
@@ -154,8 +145,7 @@ la consola (seguido del *enter*):
 
     ## [1] 4
 
-Almacenado y nombres
---------------------
+## Almacenado y nombres
 
 Puede guardar los valores de las variables con algún nombre para su
 posterior reutilización:
@@ -178,17 +168,16 @@ operadores y funciones:
 
     ## [1] 8.483896
 
-Tips
-----
+## Tips
 
 -   Los nombres válidos para una variable (objeto) son combinaciones de
-    letras, números, y el punto (".").
+    letras, números, y el punto (“.”).
 -   Los nombres no pueden empezar con un número.
--   R es "case-sensitive". x != X.
--   Hay nombres reservados ("function", "if", etc).
+-   R es “case-sensitive.” x != X.
+-   Hay nombres reservados (“function,” “if,” etc).
 -   Para comentar line-in en R se usa “\#”
--   Las asignaciones se hacen con "&lt;-", y es buen estilo el rodear
-    "&lt;-" por un espacio a cada lado:
+-   Las asignaciones se hacen con “&lt;-,” y es buen estilo el rodear
+    “&lt;-” por un espacio a cada lado:
 
 <!-- -->
 
@@ -215,8 +204,7 @@ Tips
 -   Si observa un signo “+” en la consola, quiere decir que R espera un
     comando, para salir use ESC
 
-Generación de datos
--------------------
+## Generación de datos
 
 Secuencia regular de números enteros
 
@@ -238,14 +226,14 @@ Secuencia regular de números enteros
 
     ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 
-Funciones simples
------------------
+## Funciones simples
 
 <center>
-<table style="width:39%;">
+
+<table>
 <colgroup>
-<col width="5%" />
-<col width="33%" />
+<col style="width: 11%" />
+<col style="width: 88%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -298,6 +286,7 @@ Funciones simples
 </table>
 
 </center>
+
 Podemos también crear una función
 
     f_x <- function(x){
@@ -305,8 +294,7 @@ Podemos también crear una función
       y
     }
 
-Importando datos en R
-=====================
+\#Importando datos en R
 
 Es importante fijar el directorio de trabajo
 
@@ -325,7 +313,7 @@ en donde hayan creado la carpeta donde almacen los datos por ejemplo
     setwd("~/Documents/Consultorias&Cursos/DataLectures")
     getwd()
 
-    ## [1] "/Users/victormoralesonate/Documents/Consultorias&Cursos/DataLectures"
+    ## [1] "/Users/victormorales/Documents/Consultorias&Cursos/DataLectures"
 
 ### Excel
 
@@ -333,11 +321,12 @@ Excel: En este caso se debe abrir la hoja de datos de Excel e ir a la
 opción *guardar como*. En esta opción se elige *valores delimitados por
 comas*.
 
+    setwd("~/Documents/Consultorias&Cursos/DataLectures")
     datos.excel <- read.csv("Mundo.csv", sep=";", header=TRUE)
     str(datos.excel) #Describe las variables del dataframe
 
     ## 'data.frame':    146 obs. of  13 variables:
-    ##  $ NOMBRE    : Factor w/ 146 levels "AFGANISTAN         ",..: 4 6 14 16 19 20 22 23 31 32 ...
+    ##  $ NOMBRE    : chr  "ANGOLA             " "ARGELIA            " "BENIN              " "BOTSWANA           " ...
     ##  $ PNB       : int  NA 60728 1315 1202 1589 1205 170 10494 159 1761 ...
     ##  $ REGION    : int  1 1 1 1 1 1 1 1 1 1 ...
     ##  $ Pob_Urbana: num  28.3 44.7 42 23.6 9 7.3 61.5 49.4 27.6 42.2 ...
@@ -355,7 +344,7 @@ comas*.
     head(datos.excel) #Muestra los 6 primeros valores
 
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["NOMBRE"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["PNB"],"name":[2],"type":["int"],"align":["right"]},{"label":["REGION"],"name":[3],"type":["int"],"align":["right"]},{"label":["Pob_Urbana"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["poblacion"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["natalidad"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["exp_vida"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["tasaM_inf"],"name":[8],"type":["int"],"align":["right"]},{"label":["PNB_PC"],"name":[9],"type":["int"],"align":["right"]},{"label":["tasa_ferti"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["tasa_crec"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["tasa_mort"],"name":[12],"type":["int"],"align":["right"]},{"label":["calorias"],"name":[13],"type":["int"],"align":["right"]}],"data":[{"1":"ANGOLA","2":"NA","3":"1","4":"28.3","5":"10.0","6":"47.2","7":"44.0","8":"137","9":"NA","10":"6.4","11":"2.70","12":"20","13":"NA","_rn_":"1"},{"1":"ARGELIA","2":"60728","3":"1","4":"44.7","5":"25.4","6":"40.2","7":"62.5","8":"74","9":"2629","10":"6.1","11":"3.12","12":"9","13":"113","_rn_":"2"},{"1":"BENIN","2":"1315","3":"1","4":"42.0","5":"4.7","6":"50.5","7":"46.0","8":"110","9":"305","10":"7.0","11":"3.15","12":"19","13":"93","_rn_":"3"},{"1":"BOTSWANA","2":"1202","3":"1","4":"23.6","5":"1.3","6":"47.3","7":"56.5","8":"67","9":"1059","10":"6.3","11":"3.51","12":"12","13":"93","_rn_":"4"},{"1":"BURKINA FASO","2":"1589","3":"1","4":"9.0","5":"9.0","6":"47.2","7":"47.2","8":"138","9":"191","10":"6.5","11":"2.67","12":"19","13":"83","_rn_":"5"},{"1":"BURUNDI","2":"1205","3":"1","4":"7.3","5":"5.5","6":"45.7","7":"48.5","8":"112","9":"241","10":"6.3","11":"2.88","12":"17","13":"95","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["NOMBRE"],"name":[1],"type":["chr"],"align":["left"]},{"label":["PNB"],"name":[2],"type":["int"],"align":["right"]},{"label":["REGION"],"name":[3],"type":["int"],"align":["right"]},{"label":["Pob_Urbana"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["poblacion"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["natalidad"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["exp_vida"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["tasaM_inf"],"name":[8],"type":["int"],"align":["right"]},{"label":["PNB_PC"],"name":[9],"type":["int"],"align":["right"]},{"label":["tasa_ferti"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["tasa_crec"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["tasa_mort"],"name":[12],"type":["int"],"align":["right"]},{"label":["calorias"],"name":[13],"type":["int"],"align":["right"]}],"data":[{"1":"ANGOLA","2":"NA","3":"1","4":"28.3","5":"10.0","6":"47.2","7":"44.0","8":"137","9":"NA","10":"6.4","11":"2.70","12":"20","13":"NA","_rn_":"1"},{"1":"ARGELIA","2":"60728","3":"1","4":"44.7","5":"25.4","6":"40.2","7":"62.5","8":"74","9":"2629","10":"6.1","11":"3.12","12":"9","13":"113","_rn_":"2"},{"1":"BENIN","2":"1315","3":"1","4":"42.0","5":"4.7","6":"50.5","7":"46.0","8":"110","9":"305","10":"7.0","11":"3.15","12":"19","13":"93","_rn_":"3"},{"1":"BOTSWANA","2":"1202","3":"1","4":"23.6","5":"1.3","6":"47.3","7":"56.5","8":"67","9":"1059","10":"6.3","11":"3.51","12":"12","13":"93","_rn_":"4"},{"1":"BURKINA FASO","2":"1589","3":"1","4":"9.0","5":"9.0","6":"47.2","7":"47.2","8":"138","9":"191","10":"6.5","11":"2.67","12":"19","13":"83","_rn_":"5"},{"1":"BURUNDI","2":"1205","3":"1","4":"7.3","5":"5.5","6":"45.7","7":"48.5","8":"112","9":"241","10":"6.3","11":"2.88","12":"17","13":"95","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 
 ### Stata
@@ -372,4 +361,4 @@ Se requiere el paquete *foreign*
 ### SPSS
 
     datos.spss <- read.spss("per12_2010.sav",use.value.labels=TRUE, max.value.labels=TRUE, to.data.frame=TRUE)
-    head(datos.spss)
+    head(datos.spss) 
